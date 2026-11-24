@@ -234,9 +234,8 @@ The CDK stack creates the AgentCore Runtime, Guardrail, incident table, notice t
 Commands actually run in the build environment:
 
 ```text
-[stress] 18/18 passed · released=0 · chain=ok · 0.02s
-Ran 61 tests in 0.229s
-OK
+[stress] 18/18 passed · released=0 · chain=ok
+Ran 61 tests ... OK
 generation 3 · held 3 · recalled 2 · notified 6 · released 0 · ledger 19 verified
 CDK synth (aws-cdk-lib 2.278.0) -> HoldContainmentStack.template.json
 ```

@@ -1,5 +1,7 @@
 # HOLD
 
+[![hold-evidence](https://github.com/Senthil455/hold-containment-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/Senthil455/hold-containment-agent/actions/workflows/ci.yml)
+
 **A food-safety containment agent that can make a recall bigger, but cannot make it smaller.**
 
 HOLD is a complete, runnable submission for the AWS Builder Center **“Agents, your rules: Bedrock Managed Agents build”**. It is built on **Amazon Bedrock AgentCore Runtime**, with **Bedrock Guardrails**, a scoped runtime role, a deterministic containment kernel, a two-person human release plane and a hash-chained audit ledger.
