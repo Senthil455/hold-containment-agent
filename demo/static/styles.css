@@ -433,6 +433,7 @@ hr.rule { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
 .lot--RECALLED .lot__stripe { background: var(--red); box-shadow: 0 0 10px rgba(255, 90, 74, .4); }
 .lot--HELD .lot__stripe { background: var(--amber); }
 .lot--RELEASED .lot__stripe { background: var(--blue); }
+.lot--DISPOSITIONED .lot__stripe { background: var(--violet); }
 .lot--SHIPPABLE .lot__stripe { background: #3c4734; }
 
 .lot__main { min-width: 0; padding-left: 2px; }
@@ -474,6 +475,7 @@ hr.rule { border: 0; border-top: 1px solid var(--line); margin: 14px 0; }
 .lot--RECALLED .lot__state { color: var(--red); border-color: rgba(255, 90, 74, .4); }
 .lot--HELD .lot__state { color: var(--amber); border-color: rgba(240, 182, 74, .4); }
 .lot--RELEASED .lot__state { color: var(--blue); border-color: rgba(143, 199, 255, .4); }
+.lot--DISPOSITIONED .lot__state { color: var(--violet); border-color: rgba(184, 166, 255, .4); }
 
 .panel-foot {
   padding: 7px 12px;

@@ -71,6 +71,7 @@ class LotState(str, Enum):
     HELD = "HELD"
     RECALLED = "RECALLED"
     RELEASED = "RELEASED"
+    DISPOSITIONED = "DISPOSITIONED"
 
 
 # ---------------------------------------------------------------------------
@@ -253,6 +254,7 @@ class ContainmentState:
     notified: frozenset[str] = frozenset()
     released: frozenset[str] = frozenset()
     dispositioned: frozenset[str] = frozenset()
+    closed: bool = False
     updated_at: str = ""
 
     # -- monotone constructors -------------------------------------------
@@ -261,7 +263,15 @@ class ContainmentState:
         new = self.held | frozenset(lot_ids)
         if new == self.held:
             return self
-        return replace(self, held=new, generation=self.generation + 1, updated_at=at)
+        # New containment activity reopens a closed incident. Closure is not a
+        # lock that can prevent a precautionary hold.
+        return replace(
+            self,
+            held=new,
+            closed=False,
+            generation=self.generation + 1,
+            updated_at=at,
+        )
 
     def with_recall(self, lot_ids: Iterable[str], *, at: str) -> "ContainmentState":
         lots = frozenset(lot_ids)
@@ -273,6 +283,7 @@ class ContainmentState:
             self,
             held=new_held,
             recalled=new_recalled,
+            closed=False,
             generation=self.generation + 1,
             updated_at=at,
         )
@@ -295,6 +306,31 @@ class ContainmentState:
             updated_at=at,
         )
 
+    def with_disposition(
+        self, lot_ids: Iterable[str], *, disposition: str, at: str
+    ) -> "ContainmentState":
+        """Human-plane only. Resolve held inventory without pretending it is
+        shippable: ``RELEASE`` records a release, every other disposition is
+        recorded as a distinct terminal lot state."""
+        lots = frozenset(lot_ids)
+        if disposition == "RELEASE":
+            return replace(
+                self,
+                held=self.held - lots,
+                recalled=self.recalled - lots,
+                released=self.released | lots,
+                generation=self.generation + 1,
+                updated_at=at,
+            )
+        return replace(
+            self,
+            held=self.held - lots,
+            recalled=self.recalled - lots,
+            dispositioned=self.dispositioned | lots,
+            generation=self.generation + 1,
+            updated_at=at,
+        )
+
     # -- views ------------------------------------------------------------
 
     def lot_state(self, lot_id: str) -> LotState:
@@ -302,6 +338,8 @@ class ContainmentState:
             return LotState.RECALLED
         if lot_id in self.held:
             return LotState.HELD
+        if lot_id in self.dispositioned:
+            return LotState.DISPOSITIONED
         if lot_id in self.released:
             return LotState.RELEASED
         return LotState.SHIPPABLE
@@ -314,6 +352,8 @@ class ContainmentState:
                 "r": sorted(self.recalled),
                 "n": sorted(self.notified),
                 "x": sorted(self.released),
+                "d": sorted(self.dispositioned),
+                "c": self.closed,
             }
         )
 
@@ -324,6 +364,8 @@ class ContainmentState:
             "recalled": sorted(self.recalled),
             "notified": sorted(self.notified),
             "released": sorted(self.released),
+            "dispositioned": sorted(self.dispositioned),
+            "closed": self.closed,
             "updated_at": self.updated_at,
             "digest": self.digest(),
         }

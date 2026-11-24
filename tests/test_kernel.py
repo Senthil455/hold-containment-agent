@@ -10,7 +10,7 @@ import unittest
 from datetime import timedelta
 
 from hold.cosign import CosignAuthority
-from hold.domain import AGENT, QA_DIRECTOR, SYSTEM, Decision
+from hold.domain import AGENT, QA_DIRECTOR, SYSTEM, Decision, LotState
 from hold.kernel import AuthorityKernel
 from hold.ledger import Ledger
 from hold.seed import build_world
@@ -208,6 +208,133 @@ class HumanPlaneTests(unittest.TestCase):
         self.assertEqual(self.kernel.state.released, frozenset({"LOT-2291"}))
 
 
+class DispositionAndClosureTests(unittest.TestCase):
+    """The human-plane paths that resolve containment.
+
+    These cover the two ways a lot can leave the held set without being
+    released, and the closure gate that prevents an incident from ending
+    containment as a side effect.
+    """
+
+    def setUp(self) -> None:
+        self.kernel, self.ledger, self.cosign = make()
+        contain(self.kernel)
+
+    def _token(self, action: str, payload: dict) -> dict:
+        return self.cosign.issue(
+            action=action,
+            requester=QA_DIRECTOR.id,
+            approver="human:vp-quality",
+            payload=payload,
+        )
+
+    def _invoke(self, tool: str, payload: dict):
+        token = self._token(tool, payload)
+        return self.kernel.invoke(QA_DIRECTOR, tool, {**payload, "cosign": token})
+
+    def _resolve_all(self) -> None:
+        release = {"lots": ["LOT-2288"], "disposition": "RELEASE"}
+        self.assertEqual(self._invoke("approve_disposition", release).decision, Decision.ALLOW)
+        destroy = {"lots": ["LOT-2291", "LOT-2292"], "disposition": "DESTROY"}
+        self.assertEqual(self._invoke("approve_disposition", destroy).decision, Decision.ALLOW)
+
+    def test_release_requires_a_current_hold(self) -> None:
+        payload = {"lots": ["LOT-2305"], "justification": "never held"}
+        r = self._invoke("release_hold", payload)
+        self.assertEqual(r.decision, Decision.DENY)
+        self.assertEqual(r.code, "NOT_HELD")
+        self.assertNotIn("LOT-2305", self.kernel.state.released)
+
+    def test_release_of_already_released_lot_is_denied(self) -> None:
+        first = self._invoke(
+            "release_hold", {"lots": ["LOT-2288"], "justification": "culture negative"}
+        )
+        self.assertEqual(first.decision, Decision.ALLOW)
+        self.assertEqual(self.kernel.state.lot_state("LOT-2288"), LotState.RELEASED)
+
+        second = self._invoke(
+            "release_hold", {"lots": ["LOT-2288"], "justification": "release again"}
+        )
+        self.assertEqual(second.decision, Decision.DENY)
+        self.assertEqual(second.code, "NOT_HELD")
+
+    def test_approve_disposition_release_records_a_release(self) -> None:
+        payload = {"lots": ["LOT-2288"], "disposition": "RELEASE"}
+        r = self._invoke("approve_disposition", payload)
+        self.assertEqual(r.decision, Decision.ALLOW)
+        state = self.kernel.state
+        self.assertIn("LOT-2288", state.released)
+        self.assertNotIn("LOT-2288", state.held)
+        self.assertNotIn("LOT-2288", state.dispositioned)
+        self.assertEqual(state.lot_state("LOT-2288"), LotState.RELEASED)
+        self.assertEqual(r.output["released"], ["LOT-2288"])
+
+    def test_approve_disposition_destroy_is_not_shippable(self) -> None:
+        payload = {"lots": ["LOT-2291"], "disposition": "DESTROY"}
+        r = self._invoke("approve_disposition", payload)
+        self.assertEqual(r.decision, Decision.ALLOW)
+        state = self.kernel.state
+        self.assertIn("LOT-2291", state.dispositioned)
+        self.assertNotIn("LOT-2291", state.held)
+        self.assertNotIn("LOT-2291", state.recalled)
+        self.assertNotIn("LOT-2291", state.released)
+        self.assertEqual(state.lot_state("LOT-2291"), LotState.DISPOSITIONED)
+        self.assertEqual(r.output["lot_states"], {"LOT-2291": "DISPOSITIONED"})
+
+    def test_approve_disposition_requires_a_current_hold(self) -> None:
+        payload = {"lots": ["LOT-2305"], "disposition": "DESTROY"}
+        r = self._invoke("approve_disposition", payload)
+        self.assertEqual(r.decision, Decision.DENY)
+        self.assertEqual(r.code, "NOT_HELD")
+        self.assertNotIn("LOT-2305", self.kernel.state.dispositioned)
+
+    def test_approve_disposition_release_blocks_recalled_lot(self) -> None:
+        payload = {"lots": ["LOT-2291"], "disposition": "RELEASE"}
+        r = self._invoke("approve_disposition", payload)
+        self.assertEqual(r.decision, Decision.DENY)
+        self.assertEqual(r.code, "RELEASE_BLOCKED_BY_RECALL")
+        self.assertNotIn("LOT-2291", self.kernel.state.released)
+
+    def test_close_incident_blocks_active_containment(self) -> None:
+        r = self._invoke("close_incident", {"summary": "closing early"})
+        self.assertEqual(r.decision, Decision.DENY)
+        self.assertEqual(r.code, "ACTIVE_CONTAINMENT")
+        self.assertFalse(self.kernel.state.closed)
+
+    def test_close_incident_after_every_lot_is_resolved(self) -> None:
+        self._resolve_all()
+        self.assertEqual(self.kernel.state.held, frozenset())
+        self.assertEqual(self.kernel.state.recalled, frozenset())
+
+        r = self._invoke("close_incident", {"summary": "All lots dispositioned."})
+        self.assertEqual(r.decision, Decision.ALLOW)
+        state = self.kernel.state
+        self.assertTrue(state.closed)
+        self.assertIn("INCIDENT_CLOSED", r.flags)
+        self.assertEqual(state.lot_state("LOT-2288"), LotState.RELEASED)
+        self.assertEqual(state.lot_state("LOT-2291"), LotState.DISPOSITIONED)
+
+    def test_close_incident_twice_is_denied(self) -> None:
+        self._resolve_all()
+        first = self._invoke("close_incident", {"summary": "closed"})
+        self.assertEqual(first.decision, Decision.ALLOW)
+        second = self._invoke("close_incident", {"summary": "closed again"})
+        self.assertEqual(second.decision, Decision.DENY)
+        self.assertEqual(second.code, "ALREADY_CLOSED")
+
+    def test_new_hold_reopens_a_closed_incident(self) -> None:
+        self._resolve_all()
+        self.assertEqual(
+            self._invoke("close_incident", {"summary": "closed"}).decision, Decision.ALLOW
+        )
+        r = self.kernel.invoke(AGENT, "place_hold", {
+            "lots": ["LOT-2305"], "reason_code": "PRECAUTIONARY",
+        })
+        self.assertEqual(r.decision, Decision.ALLOW)
+        self.assertFalse(self.kernel.state.closed)
+        self.assertIn("LOT-2305", self.kernel.state.held)
+
+
 class SchemaAndScopeTests(unittest.TestCase):
     def test_unknown_field_is_refused(self) -> None:
         kernel, _, _ = make()
@@ -269,6 +396,32 @@ class LedgerTests(unittest.TestCase):
         status = ledger.verify()
         self.assertFalse(status.ok)
         self.assertEqual(status.broken_at, 1)
+
+
+class LedgerBoundsTests(unittest.TestCase):
+    def test_tamper_on_empty_ledger_raises_a_clear_error(self) -> None:
+        ledger = Ledger()
+        with self.assertRaises(IndexError):
+            ledger._tamper_for_demo(1, {"tool": "forged"})
+
+    def test_shadow_drill_handles_an_empty_ledger(self) -> None:
+        from demo.server import shadow_tamper_drill
+
+        result = shadow_tamper_drill(Ledger())
+        self.assertTrue(result["intact"])
+        self.assertIsNone(result["tampered_seq"])
+        self.assertFalse(result["detected"])
+
+    def test_shadow_drill_handles_a_single_entry_ledger(self) -> None:
+        from demo.server import shadow_tamper_drill
+
+        ledger = Ledger()
+        ledger.append({"tool": "place_hold"})
+        result = shadow_tamper_drill(ledger)
+        self.assertEqual(result["tampered_seq"], 1)
+        self.assertTrue(result["detected"])
+        self.assertEqual(result["broken_at"], 1)
+        self.assertTrue(ledger.verify().ok)
 
 
 if __name__ == "__main__":

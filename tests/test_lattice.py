@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import unittest
 
-from hold.domain import ContainmentState
+from hold.domain import ContainmentState, LotState
 from hold.lattice import containment_score, delta, dominant, well_formed
 from hold.seed import build_world, implicated_lots
 
@@ -51,6 +51,15 @@ class DominanceTests(unittest.TestCase):
         self.assertTrue(d.tightens)
         self.assertFalse(d.loosens)
 
+    def test_disposition_is_visible_and_terminal(self) -> None:
+        held = self.base.with_hold(["LOT-2291"], at="t")
+        after = held.with_disposition(["LOT-2291"], disposition="DESTROY", at="t")
+        self.assertEqual(after.lot_state("LOT-2291"), LotState.DISPOSITIONED)
+        self.assertNotIn("LOT-2291", after.held)
+        d = delta(held, after)
+        self.assertEqual(d.dispositioned_added, ("LOT-2291",))
+        self.assertEqual(well_formed(after, self.world), ())
+
 
 class WellFormedTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -68,6 +77,21 @@ class WellFormedTests(unittest.TestCase):
             held=frozenset({"LOT-2291"}), released=frozenset({"LOT-2291"})
         )
         self.assertTrue(any("both held and released" in p for p in well_formed(s, self.world)))
+
+    def test_held_and_dispositioned_overlap_is_a_violation(self) -> None:
+        s = ContainmentState(
+            held=frozenset({"LOT-2291"}), dispositioned=frozenset({"LOT-2291"})
+        )
+        self.assertTrue(
+            any("both held and dispositioned" in p for p in well_formed(s, self.world))
+        )
+
+    def test_closed_incident_cannot_keep_active_containment(self) -> None:
+        s = ContainmentState(held=frozenset({"LOT-2291"}), closed=True)
+        self.assertTrue(
+            any("closed incident still has active containment" in p
+                for p in well_formed(s, self.world))
+        )
 
     def test_notified_account_must_have_received_contained_product(self) -> None:
         # CUS-927 received LOT-2305 and LOT-2250, never the implicated lots.

@@ -30,6 +30,7 @@ from __future__ import annotations
 import re
 import threading
 from collections import deque
+from dataclasses import replace
 from datetime import timedelta
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
@@ -641,6 +642,15 @@ class AuthorityKernel:
         # ---- RELEASE (human plane, co-signed) ----------------------------
         if spec.name == "release_hold":
             lots = args["lots"]
+            not_held = [l for l in lots if l not in before.held]
+            if not_held:
+                raise ValidationError(
+                    "NOT_HELD",
+                    f"Lot(s) {not_held} are not under hold. Only currently held inventory "
+                    "can be released; a never-held, already-released or dispositioned lot "
+                    "is not a release candidate.",
+                    "KERNEL",
+                )
             recalled = [l for l in lots if l in before.recalled]
             if recalled:
                 raise ValidationError(
@@ -671,6 +681,7 @@ class AuthorityKernel:
                 notified=before.notified,
                 released=before.released,
                 dispositioned=before.dispositioned,
+                closed=before.closed,
                 updated_at=now,
             )
             return after, {
@@ -681,32 +692,60 @@ class AuthorityKernel:
 
         if spec.name == "approve_disposition":
             lots = args["lots"]
-            after = before.__class__(
+            disposition = args["disposition"]
+            not_held = [l for l in lots if l not in before.held]
+            if not_held:
+                raise ValidationError(
+                    "NOT_HELD",
+                    f"Lot(s) {not_held} are not under hold, so there is no containment "
+                    "decision to disposition.",
+                    "KERNEL",
+                )
+            if disposition == "RELEASE":
+                recalled = [l for l in lots if l in before.recalled]
+                if recalled:
+                    raise ValidationError(
+                        "RELEASE_BLOCKED_BY_RECALL",
+                        f"Lot(s) {recalled} are still in recall scope. Narrow the recall "
+                        "with its own co-signature before approving release.",
+                        "KERNEL",
+                    )
+            after = before.with_disposition(lots, disposition=disposition, at=now)
+            return after, {
+                "disposition": disposition,
+                "lots": sorted(lots),
+                "released": sorted(after.released - before.released),
+                "dispositioned": sorted(after.dispositioned - before.dispositioned),
+                "lot_states": {lot: after.lot_state(lot).value for lot in sorted(lots)},
+                "cosign_approver": (args.get("cosign") or {}).get("approver"),
+            }, ("HUMAN_OVERRIDE", "DISPOSITION"), Decision.ALLOW
+
+        if spec.name == "close_incident":
+            if before.closed:
+                raise ValidationError(
+                    "ALREADY_CLOSED", "The incident is already closed.", "KERNEL"
+                )
+            active = sorted(before.held | before.recalled)
+            if active:
+                raise ValidationError(
+                    "ACTIVE_CONTAINMENT",
+                    f"Lot(s) {active} are still held or recalled. Resolve every lot with a "
+                    "co-signed release or disposition before closing the incident. Closure "
+                    "must not end containment as a side effect.",
+                    "KERNEL",
+                )
+            after = replace(
+                before,
+                closed=True,
                 generation=before.generation + 1,
-                held=before.held - set(lots),
-                recalled=before.recalled - set(lots),
-                notified=before.notified,
-                released=before.released,
-                dispositioned=before.dispositioned | set(lots),
                 updated_at=now,
             )
             return after, {
-                "disposition": args["disposition"],
-                "lots": sorted(lots),
+                "closed": True,
+                "summary": args["summary"],
+                "generation": after.generation,
                 "cosign_approver": (args.get("cosign") or {}).get("approver"),
-            }, ("HUMAN_OVERRIDE",), Decision.ALLOW
-
-        if spec.name == "close_incident":
-            after = before.__class__(
-                generation=before.generation + 1,
-                held=before.held,
-                recalled=before.recalled,
-                notified=before.notified,
-                released=before.released,
-                dispositioned=before.dispositioned,
-                updated_at=now,
-            )
-            return after, {"closed": True, "summary": args["summary"]}, ("HUMAN_OVERRIDE",), Decision.ALLOW
+            }, ("HUMAN_OVERRIDE", "INCIDENT_CLOSED"), Decision.ALLOW
 
         # Unreachable for the current registry, but the default is refuse.
         raise ValidationError("UNPLANNED_TOOL", f"No planner for '{spec.name}'.", "KERNEL")
@@ -812,6 +851,8 @@ class AuthorityKernel:
             "held": sorted(self._state.held),
             "notified": sorted(self._state.notified),
             "released": sorted(self._state.released),
+            "dispositioned": sorted(self._state.dispositioned),
+            "closed": self._state.closed,
             "lots": {
                 lid: self._state.lot_state(lid).value
                 for lid in sorted(self.world.lots)

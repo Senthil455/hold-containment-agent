@@ -99,6 +99,8 @@ class Demo:
             "recalled": len(st.recalled),
             "notified": len(st.notified),
             "released": len(st.released),
+            "dispositioned": len(st.dispositioned),
+            "closed": st.closed,
             "held_units": sum(self.world.lots[l].units for l in st.held),
             "cases_in_market": shipped,
             "accounts_total": len(self.world.customers),
@@ -130,7 +132,7 @@ class Demo:
                 "accounts": len(ships),
                 "note": lot.note,
             })
-        order = {"RECALLED": 0, "HELD": 1, "SHIPPABLE": 2, "RELEASED": 3}
+        order = {"RECALLED": 0, "HELD": 1, "DISPOSITIONED": 2, "SHIPPABLE": 3, "RELEASED": 4}
         rows.sort(key=lambda r: (order.get(r["state"], 9), r["lot_id"]))
         return rows
 
@@ -293,15 +295,21 @@ class Demo:
                 "metrics": self.metrics()}
 
     def human_action(self, action: str, lots: list[str], justification: str,
-                     approver: str = "human:vp-quality") -> dict[str, Any]:
-        payload = {"lots": sorted(lots), "justification": justification}
-        token = self.cosign.issue(
-            action=action,
-            requester=QA_DIRECTOR.id,
-            approver=approver,
-            payload=payload,
-        )
-        args = {**payload, "cosign": token}
+                     approver: str = "human:vp-quality",
+                     disposition: str | None = None,
+                     summary: str | None = None) -> dict[str, Any]:
+        if action == "approve_disposition":
+            payload = {"lots": sorted(lots), "disposition": disposition or ""}
+            args = {**payload, "cosign": self.cosign.issue(
+                action=action, requester=QA_DIRECTOR.id, approver=approver, payload=payload)}
+        elif action == "close_incident":
+            payload = {"summary": summary or justification}
+            args = {**payload, "cosign": self.cosign.issue(
+                action=action, requester=QA_DIRECTOR.id, approver=approver, payload=payload)}
+        else:
+            payload = {"lots": sorted(lots), "justification": justification}
+            args = {**payload, "cosign": self.cosign.issue(
+                action=action, requester=QA_DIRECTOR.id, approver=approver, payload=payload)}
         r = self.kernel.invoke(QA_DIRECTOR, action, args)
         if not r.blocked and action == "release_hold":
             self.kernel.resolve_requests(lots)
@@ -450,12 +458,16 @@ class Handler(BaseHTTPRequestHandler):
                     return
                 if path == "/api/human/action":
                     action = str(data.get("action", ""))
-                    if action not in {"release_hold", "narrow_recall"}:
+                    if action not in {"release_hold", "narrow_recall",
+                                      "approve_disposition", "close_incident"}:
                         self._json(400, {"error": "unsupported human action"})
                         return
                     lots = [str(x) for x in (data.get("lots") or [])]
                     just = str(data.get("justification", "Co-signed in the human console."))
-                    self._json(200, self.demo.human_action(action, lots, just))
+                    disposition = str(data.get("disposition", "")) or None
+                    summary = str(data.get("summary", "")) or None
+                    self._json(200, self.demo.human_action(
+                        action, lots, just, disposition=disposition, summary=summary))
                     return
                 if path == "/api/ledger/verify":
                     status = self.demo.ledger.verify()
@@ -505,7 +517,16 @@ def shadow_tamper_drill(source: Ledger) -> dict[str, Any]:
         shadow.append({k: v for k, v in entry.body.items() if k not in {"seq", "at"}},
                       at=entry.at)
     before = shadow.verify().to_json()
-    target = max(2, len(shadow) // 2)
+    if len(shadow) == 0:
+        return {
+            "note": "Shadow copy. The live ledger was not modified.",
+            "intact": before["ok"],
+            "tampered_seq": None,
+            "detected": False,
+            "broken_at": None,
+            "reason": "ledger is empty; there is no entry to tamper with",
+        }
+    target = max(1, len(shadow) // 2)
     shadow._tamper_for_demo(target, {"tool": "purge_ledger"})
     after = shadow.verify()
     return {

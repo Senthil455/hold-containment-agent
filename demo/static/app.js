@@ -147,11 +147,14 @@ function deltaSummary(d) {
     ['recalled_added', '+recalled'], ['recalled_removed', '−recalled'],
     ['notified_added', '+notified'], ['notified_removed', '−notified'],
     ['released_added', '+released'], ['released_removed', '−released'],
+    ['dispositioned_added', '+dispositioned'], ['dispositioned_removed', '−dispositioned'],
   ];
   for (const [key, label] of fields) {
     const list = d[key] || [];
     if (list.length) bits.push(`${label} ${list.join(', ')}`);
   }
+  if (d.closed_after && !d.closed_before) bits.push('incident closed');
+  if (d.closed_before && !d.closed_after) bits.push('incident reopened');
   if (d.generation_delta) bits.push(`generation ${d.generation_delta > 0 ? '+' : ''}${d.generation_delta}`);
   if (d.loosens) bits.push('LOOSENS CONTAINMENT');
   return bits.length ? bits.join(' · ') : 'no state change';
@@ -356,11 +359,13 @@ function applyState(st) {
   const recalled = new Set(st.recalled || []);
   const held = new Set(st.held || []);
   const released = new Set(st.released || []);
+  const dispositioned = new Set(st.dispositioned || []);
   for (const lot of state.boot.lots) {
     lot.state = recalled.has(lot.lot_id) ? 'RECALLED'
       : held.has(lot.lot_id) ? 'HELD'
-        : released.has(lot.lot_id) ? 'RELEASED'
-          : 'SHIPPABLE';
+        : dispositioned.has(lot.lot_id) ? 'DISPOSITIONED'
+          : released.has(lot.lot_id) ? 'RELEASED'
+            : 'SHIPPABLE';
   }
   renderLots();
 }

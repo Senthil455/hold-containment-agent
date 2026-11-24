@@ -12,6 +12,7 @@ Definitions
     a.recalled superset of  b.recalled
     a.notified superset of  b.notified
     a.released subset of    b.released
+    a.dispositioned superset of b.dispositioned
 
 ``well_formed(s)`` is the set of structural invariants that must hold in *any*
 reachable state, independent of monotonicity.
@@ -37,6 +38,10 @@ class Delta:
     notified_removed: tuple[str, ...]
     released_added: tuple[str, ...]
     released_removed: tuple[str, ...]
+    dispositioned_added: tuple[str, ...]
+    dispositioned_removed: tuple[str, ...]
+    closed_before: bool
+    closed_after: bool
     generation_delta: int
 
     @property
@@ -64,6 +69,10 @@ class Delta:
             "notified_removed": list(self.notified_removed),
             "released_added": list(self.released_added),
             "released_removed": list(self.released_removed),
+            "dispositioned_added": list(self.dispositioned_added),
+            "dispositioned_removed": list(self.dispositioned_removed),
+            "closed_before": self.closed_before,
+            "closed_after": self.closed_after,
             "generation_delta": self.generation_delta,
             "loosens": self.loosens,
             "tightens": self.tightens,
@@ -80,6 +89,10 @@ def delta(before: ContainmentState, after: ContainmentState) -> Delta:
         notified_removed=tuple(sorted(before.notified - after.notified)),
         released_added=tuple(sorted(after.released - before.released)),
         released_removed=tuple(sorted(before.released - after.released)),
+        dispositioned_added=tuple(sorted(after.dispositioned - before.dispositioned)),
+        dispositioned_removed=tuple(sorted(before.dispositioned - after.dispositioned)),
+        closed_before=before.closed,
+        closed_after=after.closed,
         generation_delta=after.generation - before.generation,
     )
 
@@ -96,6 +109,7 @@ def dominant(after: ContainmentState, before: ContainmentState) -> bool:
         and after.recalled >= before.recalled
         and after.notified >= before.notified
         and after.released <= before.released
+        and after.dispositioned >= before.dispositioned
         and after.generation >= before.generation
     )
 
@@ -107,7 +121,7 @@ def well_formed(state: ContainmentState, world: World) -> tuple[str, ...]:
     """
     problems: list[str] = []
 
-    unknown = (state.held | state.recalled | state.released) - set(world.lots)
+    unknown = (state.held | state.recalled | state.released | state.dispositioned) - set(world.lots)
     if unknown:
         problems.append(f"unknown lot identifiers in state: {sorted(unknown)}")
 
@@ -117,6 +131,27 @@ def well_formed(state: ContainmentState, world: World) -> tuple[str, ...]:
 
     if state.held & state.released:
         problems.append(f"lots both held and released: {sorted(state.held & state.released)}")
+
+    if state.held & state.dispositioned:
+        problems.append(
+            f"lots both held and dispositioned: {sorted(state.held & state.dispositioned)}"
+        )
+
+    if state.recalled & state.dispositioned:
+        problems.append(
+            f"lots both recalled and dispositioned: {sorted(state.recalled & state.dispositioned)}"
+        )
+
+    if state.released & state.dispositioned:
+        problems.append(
+            f"lots both released and dispositioned: {sorted(state.released & state.dispositioned)}"
+        )
+
+    if state.closed and (state.held or state.recalled):
+        problems.append(
+            f"closed incident still has active containment: "
+            f"{sorted(state.held | state.recalled)}"
+        )
 
     if not state.recalled <= state.held:
         problems.append(f"recalled but not held: {sorted(state.recalled - state.held)}")

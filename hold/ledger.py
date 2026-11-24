@@ -142,6 +142,10 @@ class Ledger:
         """
         with self._lock:
             idx = seq - 1
+            if not 0 <= idx < len(self._entries):
+                raise IndexError(
+                    f"ledger has {len(self._entries)} entries; cannot tamper with seq {seq}"
+                )
             e = self._entries[idx]
             body = {**e.body, **mutate}
             self._entries[idx] = LedgerEntry(e.seq, e.at, body, e.prev_hash, e.hash)
