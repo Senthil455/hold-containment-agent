@@ -1,0 +1,10 @@
+{
+  "app": "python app.py",
+  "context": {
+    "model_id": "us.anthropic.claude-sonnet-4-20250514-v1:0",
+    "project": "hold",
+    "owner": "Northfield Dairy Co. (fictional)",
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true
+  }
+}

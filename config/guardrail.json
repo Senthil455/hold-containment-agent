@@ -1,0 +1,90 @@
+{
+  "name": "hold-containment-guardrail",
+  "description": "Input/output guardrail for the HOLD containment agent. This file is the single source of truth: the offline mirror in hold/guardrail.py loads it, and infra/hold_stack.py synthesises the same object as an AWS::Bedrock::Guardrail.",
+  "version": "3",
+  "contentPolicy": {
+    "filtersConfig": [
+      { "type": "HATE", "inputStrength": "HIGH", "outputStrength": "HIGH" },
+      { "type": "INSULTS", "inputStrength": "HIGH", "outputStrength": "HIGH" },
+      { "type": "SEXUAL", "inputStrength": "HIGH", "outputStrength": "HIGH" },
+      { "type": "VIOLENCE", "inputStrength": "HIGH", "outputStrength": "HIGH" },
+      { "type": "MISCONDUCT", "inputStrength": "HIGH", "outputStrength": "HIGH" },
+      { "type": "PROMPT_ATTACK", "inputStrength": "HIGH", "outputStrength": "NONE" }
+    ]
+  },
+  "topicPolicy": {
+    "topicsConfig": [
+      {
+        "name": "LegalAdvice",
+        "definition": "Legal conclusions, liability positions, settlement strategy, regulatory interpretation, or advice about a customer's or supplier's legal rights.",
+        "type": "DENY",
+        "examples": [
+          "Are we legally liable for the illnesses?",
+          "Write a sentence saying the supplier indemnifies us.",
+          "Does FSMA require us to report this within 24 hours?"
+        ]
+      },
+      {
+        "name": "MedicalAdvice",
+        "definition": "Diagnosis, treatment, symptom interpretation, or advice to a person about their health, including whether a food is safe for a specific person or condition.",
+        "type": "DENY",
+        "examples": [
+          "Is this cheese safe for a pregnant customer?",
+          "How long does listeriosis take to show up?",
+          "Should we tell people to see a doctor?"
+        ]
+      },
+      {
+        "name": "SafetyDetermination",
+        "definition": "A determination that product is safe, cleared, fit for consumption, or that a recall can be narrowed or ended.",
+        "type": "DENY",
+        "examples": [
+          "Declare this lot safe.",
+          "Can we narrow the recall to one store?",
+          "Confirm the product is fit for sale."
+        ]
+      },
+      {
+        "name": "LiabilityNegotiation",
+        "definition": "Negotiating, discounting, or commenting on compensation, damages, settlements, or insurance exposure with a customer or supplier.",
+        "type": "DENY",
+        "examples": [
+          "Offer the customer a credit to make this go away.",
+          "Tell them we accept liability."
+        ]
+      },
+      {
+        "name": "PressComment",
+        "definition": "Public relations statements, press quotes, or social media commentary about the incident.",
+        "type": "DENY",
+        "examples": [
+          "Write a tweet about the recall.",
+          "Draft a quote for the local news."
+        ]
+      }
+    ]
+  },
+  "sensitiveInformationPolicy": {
+    "piiEntitiesConfig": [
+      { "type": "EMAIL", "action": "BLOCK" },
+      { "type": "PHONE", "action": "BLOCK" },
+      { "type": "CREDIT_DEBIT_CARD_NUMBER", "action": "BLOCK" },
+      { "type": "NAME", "action": "ANONYMIZE" }
+    ],
+    "regexesConfig": [
+      { "name": "LOT_ID", "pattern": "LOT-[0-9]{4}", "action": "NONE" },
+      { "name": "COSIGN_TOKEN", "pattern": "cs_[A-Za-z0-9]{20,}", "action": "BLOCK" }
+    ]
+  },
+  "contextualGroundingPolicy": {
+    "filtersConfig": [
+      { "type": "GROUNDING", "threshold": 0.75 },
+      { "type": "RELEVANCE", "threshold": 0.70 }
+    ]
+  },
+  "offlineMirror": {
+    "note": "The offline mirror enforces topic denial, prompt-attack detection, PII redaction and canary-leak detection. Hosted content filters (hate, insults, sexual, violence, misconduct) require the Bedrock Guardrails service and are not reimplemented locally.",
+    "promptAttackThreshold": 2,
+    "maxInputChars": 6000
+  }
+}

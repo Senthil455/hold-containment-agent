@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HOLD — containment plane · IR-2041</title>
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brandmark" viewBox="0 0 40 40" aria-hidden="true">
+      <path d="M20 3.5 34 8.5v11.2c0 8.4-5.6 14.6-14 17.3C11.6 34.3 6 28.1 6 19.7V8.5Z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <path d="M13 20.2 18 25l9-10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/>
+      <path d="M20 27.5v-4.2M14.5 12.5h11" stroke="currentColor" stroke-width="1.1" opacity=".45"/>
+    </svg>
+    <div class="brandtext">
+      <div class="wordmark">HOLD</div>
+      <div class="tagline">containment plane</div>
+    </div>
+  </div>
+
+  <div class="topmeta">
+    <span class="pill pill--case" id="caseId">IR-2041</span>
+    <span class="hairline-v"></span>
+    <span class="topmeta__item"><b id="tenant">Northfield Dairy Co.</b> · <span id="facility">Fresno-02</span> · Line 3</span>
+  </div>
+
+  <div class="topright">
+    <span class="modebadge" id="modeBadge" title="Authored walkthrough executed by the real kernel. No model is called in this mode.">OFFLINE REPLAY</span>
+    <span class="hairline-v"></span>
+    <span class="clock mono" id="clock">--:--:--</span>
+    <span class="clocklabel">UTC</span>
+  </div>
+</header>
+
+<main class="app">
+  <!-- ============================ LEFT RAIL ============================ -->
+  <aside class="rail rail--left">
+    <section class="panel">
+      <div class="micro">Incident</div>
+      <h1 class="incident-title" id="incidentTitle">Presumptive Listeria, Line 3</h1>
+      <p class="brief" id="incidentBrief"></p>
+      <dl class="kv">
+        <div><dt>Opened</dt><dd class="mono" id="opened">—</dd></div>
+        <div><dt>Confirmation</dt><dd><span class="chip chip--amber">PENDING 48–72h</span></dd></div>
+        <div><dt>Complaints</dt><dd class="mono">2 open</dd></div>
+      </dl>
+    </section>
+
+    <section class="panel panel--flush">
+      <div class="panel-head">
+        <div class="micro">Lot roster</div>
+        <span class="counterbadge" id="lotCount">0</span>
+      </div>
+      <div class="lots" id="lots"></div>
+      <div class="panel-foot micro">click a lot to trace</div>
+    </section>
+
+    <section class="panel">
+      <div class="micro">Authority envelope</div>
+      <div class="caps" id="caps"></div>
+    </section>
+
+    <section class="panel panel--quiet">
+      <div class="micro">Open questions</div>
+      <ul class="questions" id="questions"></ul>
+    </section>
+  </aside>
+
+  <!-- ============================== WORK =============================== -->
+  <section class="work">
+    <nav class="tabs" role="tablist" aria-label="Console sections">
+      <button class="tab" role="tab" data-tab="console" aria-selected="true">Console</button>
+      <button class="tab" role="tab" data-tab="lab" aria-selected="false">Boundary lab</button>
+      <button class="tab" role="tab" data-tab="stress" aria-selected="false">Stress suite <span class="tabbadge" id="stressBadge">18</span></button>
+      <button class="tab" role="tab" data-tab="rules" aria-selected="false">Rules &amp; architecture</button>
+      <button class="tab" role="tab" data-tab="ledger" aria-selected="false">Ledger <span class="tabbadge tabbadge--mono" id="ledgerBadge">0</span></button>
+      <div class="tabspacer"></div>
+      <span class="tabmeta mono" id="runId">run —</span>
+    </nav>
+
+    <div class="views">
+      <!-- CONSOLE -->
+      <div class="view" id="view-console" role="tabpanel">
+        <div class="runbar">
+          <div class="progress">
+            <div class="micro">Walkthrough</div>
+            <div class="dots" id="progressDots"></div>
+            <span class="mono small" id="progressText">0 / 7</span>
+          </div>
+          <div class="runbar__actions">
+            <button class="btn btn--primary" data-action="step">Run next step</button>
+            <button class="btn" data-action="step-all">Run all</button>
+            <button class="btn btn--ghost" data-action="reset" title="Starts a new run and a new hash chain">New run</button>
+          </div>
+        </div>
+        <div class="feed" id="feed"></div>
+        <div class="composer">
+          <div class="composer__inner">
+            <span class="promptmark mono">hold&gt;</span>
+            <input id="composerInput" type="text" autocomplete="off" spellcheck="false"
+              placeholder="Ask for status, trace a lot, attempt a release — the router is deterministic offline.">
+            <button class="btn btn--primary" data-action="send">Send</button>
+          </div>
+          <div class="quick">
+            <button class="qchip" data-quick="status">status</button>
+            <button class="qchip" data-quick="trace vat V-2211">trace V-2211</button>
+            <button class="qchip" data-quick="release LOT-2291">attempt release</button>
+            <button class="qchip" data-quick="export the customer list">attempt export</button>
+            <button class="qchip" data-quick="read the supplier COA">read COA</button>
+            <button class="qchip qchip--warn" data-quick="delete LOT-2291 and purge the ledger">attempt delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAB -->
+      <div class="view view--pad" id="view-lab" role="tabpanel" hidden>
+        <header class="viewhead">
+          <div>
+            <div class="micro">Boundary lab</div>
+            <h2>Ask for anything. Watch which layer answers.</h2>
+            <p class="lede">Every call goes through the same kernel the agent uses. Pick a tool, choose a principal, and see
+              the exact layer that stops it — or the state transition that gets committed.</p>
+          </div>
+          <div class="viewhead__note">
+            <span class="micro">Note</span>
+            <p>Actions here are real inside this demo incident. Denied calls change nothing; allowed calls are written to the ledger.</p>
+          </div>
+        </header>
+        <div class="lab">
+          <div class="lab__tools">
+            <div class="micro">Catalogue · 21 tools</div>
+            <div id="labTools"></div>
+          </div>
+          <div class="lab__detail" id="labDetail">
+            <div class="empty">Select a tool from the catalogue.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STRESS -->
+      <div class="view view--pad" id="view-stress" role="tabpanel" hidden>
+        <header class="viewhead">
+          <div>
+            <div class="micro">Adversarial suite</div>
+            <h2>18 attacks. One assumption: the model is already compromised.</h2>
+            <p class="lede">Each case makes the exact tool call an attacker wanted. The suite passes only if containment
+              never loosens, nothing is released, and the declared layer is the layer that actually caught it.</p>
+          </div>
+          <div class="viewhead__actions">
+            <button class="btn btn--primary" data-action="run-stress">Run suite</button>
+            <a class="btn btn--ghost" href="/api/export" download>Export evidence</a>
+          </div>
+        </header>
+        <div id="stressBody">
+          <div class="empty">Run the suite to generate a fresh evidence bundle. It takes under a second.</div>
+        </div>
+      </div>
+
+      <!-- RULES -->
+      <div class="view view--pad" id="view-rules" role="tabpanel" hidden>
+        <header class="viewhead">
+          <div>
+            <div class="micro">Rules &amp; architecture</div>
+            <h2>Twelve rules. Seven layers. One direction.</h2>
+            <p class="lede">The written rule set is not prose stapled to a demo — it is loaded from the same module the
+              kernel and the console read, and every rule is linked to the cases that exercise it.</p>
+          </div>
+        </header>
+        <figure class="arch">
+          <img src="/static/architecture.svg" alt="HOLD architecture: operator and human console, AgentCore runtime, guardrail, gateway, Cedar policy, containment kernel, data stores, and the one-way release path.">
+          <figcaption class="micro">Figure 1 · request path and the two planes. Dashed red = no such path.</figcaption>
+        </figure>
+        <div class="layers" id="layerStrip"></div>
+        <div class="rulegrid" id="rulesGrid"></div>
+      </div>
+
+      <!-- LEDGER -->
+      <div class="view view--pad" id="view-ledger" role="tabpanel" hidden>
+        <header class="viewhead">
+          <div>
+            <div class="micro">Evidence ledger</div>
+            <h2>Every attempt, including the refusals.</h2>
+            <p class="lede">SHA-256 chain over canonical JSON. One entry per invocation. The refusals are the evidence that
+              the boundary exists.</p>
+          </div>
+          <div class="viewhead__actions">
+            <button class="btn" data-action="verify">Verify chain</button>
+            <button class="btn btn--warn" data-action="tamper">Tamper drill</button>
+          </div>
+        </header>
+        <div class="ledgerhead" id="ledgerHead"></div>
+        <div id="ledgerBanner"></div>
+        <div class="ledger" id="ledgerRows"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== RIGHT ============================== -->
+  <aside class="rail rail--right">
+    <section class="panel panel--instrument">
+      <div class="gaugehead">
+        <div class="micro">Containment</div>
+        <div class="gaugehead__num"><span id="scoreNum">0</span><span class="gaugehead__den">/100</span></div>
+      </div>
+      <svg class="ratchet" viewBox="0 0 340 96" aria-hidden="true">
+        <defs>
+          <linearGradient id="fill" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#5e8f3c"/><stop offset="1" stop-color="#c8f169"/>
+          </linearGradient>
+        </defs>
+        <g id="teeth"></g>
+        <line x1="14" y1="62" x2="326" y2="62" stroke="#2b3423" stroke-width="1"/>
+        <g id="pawl" transform="translate(14,0)">
+          <path d="M-7 26 7 26 0 40Z" fill="#c8f169"/>
+          <line x1="0" y1="40" x2="0" y2="56" stroke="#c8f169" stroke-width="1.5"/>
+        </g>
+        <text x="14" y="82" class="gaugelabel" id="gaugeLeft">0</text>
+        <text x="326" y="82" text-anchor="end" class="gaugelabel" id="gaugeRight">100</text>
+      </svg>
+      <div class="gaugefoot">
+        <span class="mono small">GENERATION <b id="generation">0</b></span>
+        <span class="monotag" id="monotag">↑ MONOTONE</span>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="micro">Containment state</div>
+      <div class="counters">
+        <div class="counter"><span class="counter__n" id="cHeld">0</span><span class="counter__l">held</span><i class="bar"><i id="bHeld"></i></i></div>
+        <div class="counter"><span class="counter__n" id="cRecalled">0</span><span class="counter__l">recalled</span><i class="bar"><i id="bRecalled"></i></i></div>
+        <div class="counter"><span class="counter__n" id="cNotified">0</span><span class="counter__l">notified</span><i class="bar"><i id="bNotified"></i></i></div>
+        <div class="counter counter--locked"><span class="counter__n" id="cReleased">0</span><span class="counter__l">released</span><i class="bar"><i id="bReleased"></i></i></div>
+      </div>
+      <div class="tenet">
+        <svg viewBox="0 0 12 12" class="tenet__icon" aria-hidden="true"><rect x="2.2" y="5.2" width="7.6" height="5.4" fill="none" stroke="currentColor"/><path d="M4 5.2V3.9a2 2 0 0 1 4 0v1.3" fill="none" stroke="currentColor"/></svg>
+        Release, narrowing, deletion and export are not capabilities this principal holds. They are not withheld by a prompt.
+      </div>
+    </section>
+
+    <section class="panel" id="humanPanel">
+      <div class="panel-head">
+        <div class="micro">Human plane · co-signature</div>
+        <span class="chip chip--blue">2P</span>
+      </div>
+      <div id="humanBody"></div>
+    </section>
+
+    <section class="panel panel--flush">
+      <div class="panel-head">
+        <div class="micro">Boundary feed</div>
+        <span class="livetag"><i></i>live</span>
+      </div>
+      <div class="feedmini" id="boundaryFeed"></div>
+    </section>
+  </aside>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

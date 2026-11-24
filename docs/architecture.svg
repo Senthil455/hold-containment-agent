@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 720" width="1240" height="720" role="img" aria-labelledby="title desc">
+  <title id="title">HOLD containment plane architecture</title>
+  <desc id="desc">Operator console to Bedrock Guardrail and AgentCore Runtime running the Bedrock Converse loop and the containment kernel, with an optional AgentCore Gateway/Cedar outer layer, committing to DynamoDB, SNS and an S3 Object Lock ledger. A separate human plane can release with a two-person payload-bound co-signature. There is no agent path to release, narrowing, deletion or export.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#c8f169" stroke-opacity="0.035" stroke-width="1"/>
+    </pattern>
+    <marker id="arrowLime" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 8 4 0 8Z" fill="#c8f169"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 8 4 0 8Z" fill="#8fc7ff"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 8 4 0 8Z" fill="#ff5a4a"/>
+    </marker>
+    <marker id="arrowGrey" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 8 4 0 8Z" fill="#5d6852"/>
+    </marker>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1240" height="720" fill="#0a0d09"/>
+  <rect width="1240" height="720" fill="url(#grid)"/>
+
+  <g font-family="ui-monospace, 'Cascadia Mono', Consolas, monospace">
+    <!-- ============================== HEADER ============================== -->
+    <text x="36" y="33" font-size="20" font-weight="700" letter-spacing="4.5" fill="#e7eedb">HOLD / CONTAINMENT PLANE</text>
+    <text x="36" y="52" font-size="8.5" letter-spacing="2.2" fill="#8b997d">NORTHFIELD DAIRY · IR-2041 · AMAZON BEDROCK AGENTCORE · ONE DIRECTION ONLY</text>
+
+    <line x1="842" y1="30" x2="868" y2="30" stroke="#c8f169" stroke-width="1.5" marker-end="url(#arrowLime)"/>
+    <text x="874" y="33" font-size="8.5" fill="#8b997d">request path</text>
+    <line x1="948" y1="30" x2="974" y2="30" stroke="#8fc7ff" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+    <text x="980" y="33" font-size="8.5" fill="#8b997d">human only</text>
+    <line x1="1058" y1="30" x2="1084" y2="30" stroke="#ff5a4a" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrowRed)"/>
+    <text x="1090" y="33" font-size="8.5" fill="#8b997d">no agent path</text>
+    <text x="842" y="52" font-size="8" letter-spacing="1.2" fill="#5d6852">7 LAYERS · 21 TOOLS · 11 REACHABLE BY THE AGENT</text>
+
+    <!-- ============================= BOUNDARY ============================= -->
+    <rect x="20" y="68" width="1200" height="620" fill="none" stroke="#2e3a27" stroke-dasharray="5 5"/>
+    <text x="32" y="84" font-size="7.5" letter-spacing="1.8" fill="#5d6852">AWS ACCOUNT · NORTHFIELD-DAIRY / PROD · us-east-1</text>
+    <path d="M20 84h14M20 84v14" stroke="#5d6852" fill="none"/>
+    <path d="M1220 672h-14M1220 672v-14" stroke="#5d6852" fill="none"/>
+
+    <!-- ============================ PIPELINE ============================== -->
+    <!-- 01 operator -->
+    <rect x="40" y="100" width="190" height="104" fill="#10150e" stroke="#33402b"/>
+    <rect x="40" y="100" width="190" height="2" fill="#c8f169"/>
+    <text x="54" y="122" font-size="8" letter-spacing="1.5" fill="#c8f169">L0 · OPERATOR</text>
+    <text x="54" y="142" font-size="13" fill="#e7eedb">Operator console</text>
+    <text x="54" y="160" font-size="8.5" fill="#8b997d">plain-language request</text>
+    <text x="54" y="176" font-size="8.5" fill="#8b997d">trace · hold · notify</text>
+    <text x="54" y="192" font-size="7.5" fill="#5d6852">IR-2041 · run id</text>
+
+    <!-- 02 guardrail -->
+    <rect x="270" y="100" width="200" height="104" fill="#10150e" stroke="#33402b"/>
+    <rect x="270" y="100" width="200" height="2" fill="#f0b64a"/>
+    <text x="284" y="122" font-size="8" letter-spacing="1.5" fill="#f0b64a">L1 · GUARDRAIL</text>
+    <text x="284" y="142" font-size="13" fill="#e7eedb">Bedrock Guardrail</text>
+    <text x="284" y="160" font-size="8.5" fill="#8b997d">denied topics · PII</text>
+    <text x="284" y="176" font-size="8.5" fill="#8b997d">prompt-attack score</text>
+    <text x="284" y="192" font-size="7.5" fill="#5d6852">block → human escalate</text>
+
+    <!-- 03 runtime -->
+    <rect x="510" y="100" width="250" height="104" fill="#10150e" stroke="#33402b"/>
+    <rect x="510" y="100" width="250" height="2" fill="#c8f169"/>
+    <text x="524" y="122" font-size="8" letter-spacing="1.5" fill="#c8f169">L2 · IDENTITY / IAM</text>
+    <text x="524" y="142" font-size="13" fill="#e7eedb">AgentCore Runtime</text>
+    <text x="524" y="160" font-size="8.5" fill="#8b997d">HOLD agent · Bedrock Converse</text>
+    <text x="524" y="176" font-size="8.5" fill="#8b997d">role: Bedrock + Guardrail only</text>
+    <text x="524" y="192" font-size="7.5" fill="#5d6852">no data-store permission at all</text>
+
+    <!-- 04 gateway -->
+    <rect x="800" y="100" width="200" height="104" fill="#10150e" stroke="#33402b"/>
+    <rect x="800" y="100" width="200" height="2" fill="#c8f169"/>
+    <text x="814" y="122" font-size="8" letter-spacing="1.5" fill="#c8f169">L3 · POLICY · OPTIONAL</text>
+    <text x="814" y="142" font-size="13" fill="#e7eedb">AgentCore Gateway</text>
+    <text x="814" y="160" font-size="8.5" fill="#8b997d">Cedar · default deny</text>
+    <text x="814" y="176" font-size="8.5" fill="#8b997d">effect-class allowlist</text>
+    <text x="814" y="192" font-size="7.5" fill="#5d6852">deploy with a real target</text>
+
+    <!-- assumption -->
+    <rect x="1040" y="100" width="160" height="104" fill="rgba(240,182,74,0.035)" stroke="#6b532a" stroke-dasharray="3 3"/>
+    <text x="1054" y="122" font-size="8" letter-spacing="1.5" fill="#f0b64a">THREAT ASSUMPTION</text>
+    <text x="1054" y="143" font-size="10" fill="#e7eedb">The model may be</text>
+    <text x="1054" y="157" font-size="10" fill="#e7eedb">fully compromised.</text>
+    <text x="1054" y="177" font-size="8" fill="#8b997d">Nothing downstream</text>
+    <text x="1054" y="190" font-size="8" fill="#8b997d">trusts its text.</text>
+
+    <!-- pipeline arrows -->
+    <line x1="230" y1="152" x2="264" y2="152" stroke="#c8f169" stroke-width="1.5" marker-end="url(#arrowLime)"/>
+    <line x1="470" y1="152" x2="504" y2="152" stroke="#c8f169" stroke-width="1.5" marker-end="url(#arrowLime)"/>
+    <line x1="760" y1="152" x2="794" y2="152" stroke="#c8f169" stroke-width="1.5" marker-end="url(#arrowLime)"/>
+    <line x1="900" y1="204" x2="900" y2="246" stroke="#c8f169" stroke-width="1.5" marker-end="url(#arrowLime)"/>
+    <text x="908" y="230" font-size="8" fill="#8b997d">typed tool call</text>
+
+    <!-- ============================ KERNEL ================================ -->
+    <rect x="700" y="250" width="500" height="190" fill="#0f140d" stroke="#8fae4b" stroke-width="1.2"/>
+    <rect x="700" y="250" width="500" height="3" fill="#c8f169"/>
+    <text x="716" y="273" font-size="12" letter-spacing="2.6" fill="#c8f169">CONTAINMENT KERNEL</text>
+    <text x="716" y="288" font-size="8.5" fill="#8b997d">invoke(principal, tool, args) — the model is never the check</text>
+
+    <g font-size="8.3">
+      <rect x="716" y="298" width="222" height="30" fill="#0a0d08" stroke="#2e3a27"/>
+      <text x="726" y="317" fill="#c8f169">L4 CAPABILITY</text><text x="840" y="317" fill="#7f8c70">principal → effects</text>
+
+      <rect x="954" y="298" width="230" height="30" fill="#0a0d08" stroke="#2e3a27"/>
+      <text x="964" y="317" fill="#8b997d">SCHEMA</text><text x="1060" y="317" fill="#6f7b63">types · batch · caps</text>
+
+      <rect x="716" y="334" width="222" height="30" fill="#0a0d08" stroke="#2e3a27"/>
+      <text x="726" y="353" fill="#8b997d">SCOPE</text><text x="840" y="353" fill="#6f7b63">identifier allowlist</text>
+
+      <rect x="954" y="334" width="230" height="30" fill="#0a0d08" stroke="#2e3a27"/>
+      <text x="964" y="353" fill="#8b997d">RATE</text><text x="1060" y="353" fill="#6f7b63">notify ceiling</text>
+
+      <rect x="716" y="370" width="222" height="30" fill="rgba(143,199,255,0.035)" stroke="#3f5d78"/>
+      <text x="726" y="389" fill="#8fc7ff">L6 CO-SIGN</text><text x="840" y="389" fill="#7fa5c9">payload-bound token</text>
+
+      <rect x="954" y="370" width="230" height="30" fill="#0a0d08" stroke="#2e3a27"/>
+      <text x="964" y="389" fill="#8b997d">PLAN</text><text x="1060" y="389" fill="#6f7b63">union · superset</text>
+
+      <rect x="716" y="406" width="222" height="30" fill="rgba(200,241,105,0.04)" stroke="#5c7133"/>
+      <text x="726" y="425" fill="#c8f169">L5 LATTICE</text><text x="840" y="425" fill="#93a883">next ⊒ current</text>
+
+      <rect x="954" y="406" width="230" height="30" fill="#0a0d08" stroke="#2e3a27"/>
+      <text x="964" y="425" fill="#8b997d">LEDGER</text><text x="1060" y="425" fill="#6f7b63">hash chain · WORM</text>
+    </g>
+    <text x="716" y="434" font-size="7.5" fill="#5d6852" opacity="0">.</text>
+
+    <!-- ============================ HUMAN ================================= -->
+    <rect x="40" y="282" width="400" height="170" fill="rgba(143,199,255,0.028)" stroke="#3f5d78"/>
+    <rect x="40" y="282" width="400" height="2" fill="#8fc7ff"/>
+    <text x="54" y="304" font-size="8" letter-spacing="1.5" fill="#8fc7ff">L6 · HUMAN PLANE · SEPARATE SURFACE</text>
+    <text x="54" y="326" font-size="13" fill="#e7eedb">Two people, one payload</text>
+    <text x="54" y="347" font-size="8.8" fill="#8b997d">qa-director reviews the evidence and authors the intent</text>
+    <text x="54" y="363" font-size="8.8" fill="#8b997d">vp-quality co-signs the exact lots + justification</text>
+    <text x="54" y="379" font-size="8.8" fill="#8b997d">payload-bound token · HMAC demo</text>
+    <text x="54" y="401" font-size="8.3" fill="#5d6852">Changing one character invalidates the signature.</text>
+    <text x="54" y="420" font-size="8.3" fill="#5d6852">The agent may request; it may never approve.</text>
+    <text x="54" y="440" font-size="7.5" fill="#8fc7ff" opacity="0.8">RELEASE · NARROW · CLOSE EXIST ONLY HERE</text>
+
+    <!-- blue release path -->
+    <line x1="440" y1="390" x2="694" y2="390" stroke="#8fc7ff" stroke-width="1.4" marker-end="url(#arrowBlue)"/>
+    <text x="452" y="382" font-size="8.3" fill="#8fc7ff">release requires a payload-bound co-signature</text>
+
+    <!-- red refusal path -->
+    <path d="M730 204v28H560v56" fill="none" stroke="#ff5a4a" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrowRed)"/>
+    <text x="446" y="226" font-size="8.3" fill="#ff5a4a">agent asks for RELEASE / NARROW / DELETE / EXPORT</text>
+    <g stroke="#ff5a4a" stroke-width="2">
+      <line x1="553" y1="292" x2="567" y2="306"/>
+      <line x1="567" y1="292" x2="553" y2="306"/>
+    </g>
+    <text x="574" y="302" font-size="8.3" fill="#ff5a4a">refused</text>
+    <text x="452" y="318" font-size="7.5" fill="#5d6852">No tool, token or role to talk around.</text>
+
+    <!-- ============================ COMMIT ================================ -->
+    <line x1="800" y1="440" x2="800" y2="496" stroke="#c8f169" stroke-width="1.4" marker-end="url(#arrowLime)"/>
+    <line x1="952" y1="440" x2="952" y2="496" stroke="#c8f169" stroke-width="1.4" marker-end="url(#arrowLime)"/>
+    <line x1="1112" y1="440" x2="1112" y2="496" stroke="#c8f169" stroke-width="1.4" marker-end="url(#arrowLime)"/>
+    <text x="808" y="466" font-size="7.5" fill="#5d6852">conditional write</text>
+    <text x="960" y="466" font-size="7.5" fill="#5d6852">approved template</text>
+    <text x="1120" y="466" font-size="7.5" fill="#5d6852">append-only</text>
+
+    <rect x="700" y="500" width="158" height="100" fill="#10150e" stroke="#33402b"/>
+    <text x="714" y="522" font-size="10.5" fill="#e7eedb">DynamoDB</text>
+    <text x="714" y="538" font-size="8" fill="#8b997d">containment state</text>
+    <text x="714" y="554" font-size="8" fill="#8b997d">generation counter</text>
+    <text x="714" y="574" font-size="7.5" fill="#5d6852">holds · recalls · notices</text>
+
+    <rect x="872" y="500" width="122" height="100" fill="#10150e" stroke="#33402b"/>
+    <text x="886" y="522" font-size="10.5" fill="#e7eedb">SNS</text>
+    <text x="886" y="538" font-size="8" fill="#8b997d">fixed templates</text>
+    <text x="886" y="554" font-size="8" fill="#8b997d">recipients derived</text>
+    <text x="886" y="570" font-size="8" fill="#8b997d">from the trace</text>
+    <text x="886" y="586" font-size="7.5" fill="#5d6852">no free text</text>
+
+    <rect x="1008" y="500" width="192" height="100" fill="#10150e" stroke="#33402b"/>
+    <text x="1022" y="522" font-size="10.5" fill="#e7eedb">S3 Object Lock</text>
+    <text x="1022" y="538" font-size="8" fill="#8b997d">ledger + evidence</text>
+    <text x="1022" y="554" font-size="8" fill="#8b997d">SHA-256 prev-hash chain</text>
+    <text x="1022" y="574" font-size="7.5" fill="#5d6852">L7 · WORM · no delete path</text>
+
+    <!-- ======================== NEGATIVE CAPABILITIES ===================== -->
+    <text x="40" y="505" font-size="8" letter-spacing="1.5" fill="#ff5a4a">NOT A CAPABILITY</text>
+    <g font-size="9" fill="#8b997d">
+      <text x="54" y="527" fill="#ff5a4a">✕</text><text x="70" y="527">Release a hold</text>
+      <text x="54" y="547" fill="#ff5a4a">✕</text><text x="70" y="547">Narrow a recall</text>
+      <text x="54" y="567" fill="#ff5a4a">✕</text><text x="70" y="567">Delete a record</text>
+      <text x="54" y="587" fill="#ff5a4a">✕</text><text x="70" y="587">Bulk-export customer data</text>
+    </g>
+    <text x="40" y="612" font-size="7.8" fill="#5d6852">Absent from the principal and from Cedar. No prompt adds them.</text>
+
+    <!-- ============================== FOOT ================================ -->
+    <line x1="40" y1="636" x2="1200" y2="636" stroke="#222a1d"/>
+    <text x="40" y="654" font-size="8" fill="#8b997d">The execution role can invoke Bedrock and the Guardrail; it has no S3, DynamoDB, SNS or KMS permission.</text>
+    <text x="40" y="668" font-size="8" fill="#5d6852">Dashed red is an absence of capability, not a policy that might be edited at runtime.</text>
+    <text x="1200" y="654" font-size="8" fill="#f0b64a" text-anchor="end">EMERGENCY STOP → revoke the runtime role</text>
+    <text x="1200" y="668" font-size="7.5" fill="#5d6852" text-anchor="end">HOLD v1.0 · synthetic incident</text>
+  </g>
+</svg>

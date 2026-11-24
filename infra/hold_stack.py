@@ -1,0 +1,335 @@
+"""Infrastructure for HOLD.
+
+Two rules shape this stack:
+
+1. The runtime role can call Bedrock and the guardrail, and nothing else. It has
+   no S3, DynamoDB or SNS permissions. If the model is compromised it still has
+   no data plane to reach.
+2. The immutable ledger is write-once from the human/tool plane, not from the
+   agent runtime. Object Lock is enabled at bucket creation; it cannot be added
+   later.
+
+The AgentCore Gateway/Cedar layer is deliberately *not* created here without a
+registered tool-plane target. An empty gateway is worse than no gateway: it looks
+like a control and enforces nothing. `infra/policy/` contains the Cedar policies
+for the deployment where the tool plane is moved behind a Gateway.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import aws_cdk as cdk
+import aws_cdk.aws_bedrock as bedrock
+import aws_cdk.aws_bedrockagentcore as agentcore
+import aws_cdk.aws_cognito as cognito
+import aws_cdk.aws_dynamodb as dynamodb
+import aws_cdk.aws_iam as iam
+import aws_cdk.aws_kms as kms
+import aws_cdk.aws_s3 as s3
+import aws_cdk.aws_sns as sns
+from constructs import Construct
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+class HoldStack(cdk.Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
+
+        model_id = str(
+            self.node.try_get_context("model_id")
+            or "us.anthropic.claude-sonnet-4-20250514-v1:0"
+        )
+        config = json.loads(
+            (ROOT / "config" / "guardrail.json").read_text(encoding="utf-8")
+        )
+
+        # -- encryption ----------------------------------------------------
+        key = kms.Key(
+            self,
+            "HoldKey",
+            description="HOLD incident, ledger and guardrail encryption",
+            enable_key_rotation=True,
+            removal_policy=cdk.RemovalPolicy.RETAIN,
+        )
+        key.add_to_resource_policy(
+            iam.PolicyStatement(
+                sid="BedrockGuardrailUse",
+                actions=["kms:Decrypt", "kms:GenerateDataKey"],
+                principals=[iam.ServicePrincipal("bedrock.amazonaws.com")],
+                resources=["*"],
+            )
+        )
+
+        # -- immutable ledger ---------------------------------------------
+        ledger_bucket = s3.Bucket(
+            self,
+            "LedgerBucket",
+            encryption=s3.BucketEncryption.KMS,
+            encryption_key=key,
+            bucket_key_enabled=True,
+            block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
+            enforce_ssl=True,
+            versioned=True,
+            object_lock_enabled=True,
+            object_lock_default_retention=s3.ObjectLockRetention.compliance(
+                cdk.Duration.days(365)
+            ),
+            removal_policy=cdk.RemovalPolicy.RETAIN,
+        )
+
+        table = dynamodb.Table(
+            self,
+            "IncidentTable",
+            table_name="hold-incident-state",
+            partition_key=dynamodb.Attribute(
+                name="pk", type=dynamodb.AttributeType.STRING
+            ),
+            sort_key=dynamodb.Attribute(
+                name="sk", type=dynamodb.AttributeType.STRING
+            ),
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
+            encryption=dynamodb.TableEncryption.CUSTOMER_MANAGED,
+            encryption_key=key,
+            stream=dynamodb.StreamViewType.NEW_AND_OLD_IMAGES,
+            point_in_time_recovery_specification=dynamodb.PointInTimeRecoverySpecification(
+                point_in_time_recovery_enabled=True
+            ),
+            removal_policy=cdk.RemovalPolicy.RETAIN,
+        )
+
+        notices = sns.Topic(
+            self,
+            "CustomerNotices",
+            topic_name="hold-customer-notices",
+            display_name="HOLD customer recall notices",
+            master_key=key,
+        )
+
+        # -- Bedrock Guardrail --------------------------------------------
+        filters = []
+        for f in config["contentPolicy"]["filtersConfig"]:
+            inp = str(f["inputStrength"])
+            out = str(f["outputStrength"])
+            filters.append(
+                bedrock.CfnGuardrail.ContentFilterConfigProperty(
+                    type=str(f["type"]),
+                    input_strength=inp,
+                    output_strength=out,
+                    input_action="BLOCK" if inp != "NONE" else "NONE",
+                    output_action="BLOCK" if out != "NONE" else "NONE",
+                    input_enabled=inp != "NONE",
+                    output_enabled=out != "NONE",
+                )
+            )
+
+        topics = [
+            bedrock.CfnGuardrail.TopicConfigProperty(
+                name=str(t["name"]),
+                definition=str(t["definition"]),
+                examples=list(t.get("examples") or []),
+                type=str(t.get("type") or "DENY"),
+                input_action="BLOCK",
+                output_action="BLOCK",
+                input_enabled=True,
+                output_enabled=True,
+            )
+            for t in config["topicPolicy"]["topicsConfig"]
+        ]
+
+        pii = [
+            bedrock.CfnGuardrail.PiiEntityConfigProperty(
+                type=str(e["type"]),
+                action=str(e["action"]),
+                input_action=str(e["action"]),
+                output_action=str(e["action"]),
+                input_enabled=True,
+                output_enabled=True,
+            )
+            for e in config["sensitiveInformationPolicy"]["piiEntitiesConfig"]
+        ]
+        regexes = [
+            bedrock.CfnGuardrail.RegexConfigProperty(
+                name=str(r["name"]),
+                pattern=str(r["pattern"]),
+                action=str(r["action"]),
+                input_action=str(r["action"]),
+                output_action=str(r["action"]),
+                input_enabled=True,
+                output_enabled=True,
+            )
+            for r in config["sensitiveInformationPolicy"]["regexesConfig"]
+        ]
+        grounding = [
+            bedrock.CfnGuardrail.ContextualGroundingFilterConfigProperty(
+                type=str(g["type"]),
+                threshold=float(g["threshold"]),
+                action="BLOCK",
+                enabled=True,
+            )
+            for g in config["contextualGroundingPolicy"]["filtersConfig"]
+        ]
+
+        guardrail = bedrock.CfnGuardrail(
+            self,
+            "HoldGuardrail",
+            name="hold-containment",
+            description=(
+                "Input/output guardrail for the HOLD containment agent. "
+                "Denied topics, prompt-attack detection, PII handling and grounding."
+            ),
+            blocked_input_messaging=(
+                "This request is outside the containment role. "
+                "A qualified human has been asked to review it."
+            ),
+            blocked_outputs_messaging=(
+                "The draft response was blocked by the safety guardrail. "
+                "Ask for containment status or escalate to a human."
+            ),
+            content_policy_config=bedrock.CfnGuardrail.ContentPolicyConfigProperty(
+                filters_config=filters
+            ),
+            topic_policy_config=bedrock.CfnGuardrail.TopicPolicyConfigProperty(
+                topics_config=topics
+            ),
+            sensitive_information_policy_config=bedrock.CfnGuardrail.SensitiveInformationPolicyConfigProperty(
+                pii_entities_config=pii,
+                regexes_config=regexes,
+            ),
+            contextual_grounding_policy_config=bedrock.CfnGuardrail.ContextualGroundingPolicyConfigProperty(
+                filters_config=grounding
+            ),
+            kms_key_arn=key.key_arn,
+        )
+        guardrail_version = bedrock.CfnGuardrailVersion(
+            self,
+            "HoldGuardrailVersion",
+            guardrail_identifier=guardrail.attr_guardrail_id,
+            description="v1 - pinned for incident IR-2041",
+        )
+
+        # -- human plane ---------------------------------------------------
+        human_pool = cognito.UserPool(
+            self,
+            "HumanPlane",
+            user_pool_name="hold-human-plane",
+            self_sign_up_enabled=False,
+            sign_in_aliases=cognito.SignInAliases(email=True),
+            mfa=cognito.Mfa.REQUIRED,
+            mfa_second_factor=cognito.MfaSecondFactor(otp=True, sms=False),
+            password_policy=cognito.PasswordPolicy(
+                min_length=14,
+                require_lowercase=True,
+                require_uppercase=True,
+                require_digits=True,
+                require_symbols=True,
+            ),
+            removal_policy=cdk.RemovalPolicy.RETAIN,
+        )
+        for group, precedence in (("qa_director", 1), ("vp_quality", 2)):
+            cognito.CfnUserPoolGroup(
+                self,
+                f"Group-{group}",
+                user_pool_id=human_pool.user_pool_id,
+                group_name=group,
+                precedence=precedence,
+            )
+        human_callback = str(
+            self.node.try_get_context("human_callback_url")
+            or "http://localhost:8787/auth/callback"
+        )
+        human_client = human_pool.add_client(
+            "ConsoleClient",
+            auth_flows=cognito.AuthFlow(user_srp=True),
+            generate_secret=False,
+            o_auth=cognito.OAuthSettings(
+                flows=cognito.OAuthFlows(authorization_code_grant=True),
+                scopes=[
+                    cognito.OAuthScope.OPENID,
+                    cognito.OAuthScope.EMAIL,
+                    cognito.OAuthScope.PROFILE,
+                ],
+                callback_urls=[human_callback],
+                logout_urls=["http://localhost:8787/"],
+            ),
+        )
+
+        # -- agent runtime -------------------------------------------------
+        artifact = agentcore.AgentRuntimeArtifact.from_asset(str(ROOT))
+        runtime = agentcore.Runtime(
+            self,
+            "HoldRuntime",
+            runtime_name="hold_containment",
+            description=(
+                "HOLD food-safety containment agent. One-way authority lattice; "
+                "release exists only on the human plane."
+            ),
+            agent_runtime_artifact=artifact,
+            environment_variables={
+                "HOLD_MODEL_ID": model_id,
+                "HOLD_GUARDRAIL_ID": guardrail.attr_guardrail_id,
+                "HOLD_GUARDRAIL_VERSION": guardrail_version.attr_version,
+                "HOLD_NOTIFY_RATE": "4",
+                "AWS_REGION": self.region,
+            },
+            authorizer_configuration=agentcore.RuntimeAuthorizerConfiguration.using_iam(),
+        )
+
+        # The runtime can reason, apply the guardrail and write its own logs.
+        # It cannot read the incident table, write the ledger bucket or publish
+        # a customer notice. Those are tool-plane credentials.
+        runtime.add_to_role_policy(
+            iam.PolicyStatement(
+                sid="InvokeApprovedModel",
+                actions=[
+                    "bedrock:InvokeModel",
+                    "bedrock:InvokeModelWithResponseStream",
+                ],
+                resources=[
+                    f"arn:aws:bedrock:{self.region}::foundation-model/*",
+                    f"arn:aws:bedrock:{self.region}:{self.account}:inference-profile/{model_id}",
+                ],
+            )
+        )
+        runtime.add_to_role_policy(
+            iam.PolicyStatement(
+                sid="ApplyGuardrail",
+                actions=["bedrock:ApplyGuardrail", "bedrock:GetGuardrail"],
+                resources=[guardrail.attr_guardrail_arn],
+            )
+        )
+        # Belt and braces: the role already has no data-plane grant. This
+        # explicit deny survives a future accidental grant to the same role.
+        runtime.add_to_role_policy(
+            iam.PolicyStatement(
+                sid="ExplicitNoDirectDataWrites",
+                effect=iam.Effect.DENY,
+                actions=[
+                    "s3:PutObject",
+                    "s3:DeleteObject",
+                    "s3:DeleteObjectVersion",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem",
+                    "dynamodb:BatchWriteItem",
+                    "dynamodb:DeleteTable",
+                ],
+                resources=["*"],
+            )
+        )
+
+        # -- outputs -------------------------------------------------------
+        cdk.CfnOutput(self, "RuntimeArn", value=runtime.agent_runtime_arn)
+        cdk.CfnOutput(self, "RuntimeRoleArn", value=runtime.role.role_arn)
+        cdk.CfnOutput(self, "GuardrailId", value=guardrail.attr_guardrail_id)
+        cdk.CfnOutput(self, "GuardrailVersion", value=guardrail_version.attr_version)
+        cdk.CfnOutput(self, "LedgerBucketName", value=ledger_bucket.bucket_name)
+        cdk.CfnOutput(self, "IncidentTableName", value=table.table_name)
+        cdk.CfnOutput(self, "NoticeTopicArn", value=notices.topic_arn)
+        cdk.CfnOutput(self, "HumanUserPoolId", value=human_pool.user_pool_id)
+        cdk.CfnOutput(self, "HumanClientId", value=human_client.user_pool_client_id)
+
+        cdk.Tags.of(self).add("Project", "HOLD")
+        cdk.Tags.of(self).add("Incident", "IR-2041")
