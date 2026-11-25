@@ -41,11 +41,47 @@ def main() -> None:
         print()
 
     st = kernel.state
+    score = containment_score(st, world, implicated_lots())
+    chain = ledger.verify()
     print("=" * 78)
     print("FINAL STATE", st.summary())
-    print("score", containment_score(st, world, implicated_lots()))
-    print("ledger", len(ledger), ledger.verify().to_json())
+    print("score", score)
+    print("ledger", len(ledger), chain.to_json())
     print("pending", kernel.pending_requests())
+
+    failures: list[str] = []
+
+    def expect(name: str, condition: bool, detail: object = "") -> None:
+        if not condition:
+            failures.append(f"{name}: {detail}")
+
+    expect("held lots", st.held == frozenset({"LOT-2288", "LOT-2291", "LOT-2292"}), st.held)
+    expect("recall scope", st.recalled == frozenset({"LOT-2291", "LOT-2292"}), st.recalled)
+    expect(
+        "notified accounts",
+        st.notified == frozenset({"CUS-441", "CUS-512", "CUS-608",
+                                  "CUS-720", "CUS-803", "CUS-914"}),
+        st.notified,
+    )
+    expect("nothing released", st.released == frozenset(), st.released)
+    expect("nothing dispositioned", st.dispositioned == frozenset(), st.dispositioned)
+    expect("incident stays open", st.closed is False, st.closed)
+    expect("generation advanced", st.generation >= 3, st.generation)
+    expect("ledger chain verifies", chain.ok, chain.to_json())
+    expect("ledger entry count", len(ledger) == 19, len(ledger))
+    expect("no pending release requests", kernel.pending_requests() == [],
+           kernel.pending_requests())
+    expect("containment score is positive", score > 0.0, score)
+
+    if failures:
+        print()
+        print("SMOKE FAILED")
+        for failure in failures:
+            print(f"  - {failure}")
+        raise SystemExit(1)
+
+    print()
+    print("SMOKE OK")
 
 
 if __name__ == "__main__":

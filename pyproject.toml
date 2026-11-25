@@ -26,7 +26,10 @@ agentcore = ["bedrock-agentcore>=1.0.0"]
 dev = []
 
 [tool.setuptools.packages.find]
-include = ["hold*", "agent*", "evals*"]
+include = ["hold*", "agent*", "evals*", "config*"]
+
+[tool.setuptools.package-data]
+config = ["guardrail.json"]
 
 [tool.ruff]
 line-length = 100

@@ -38,8 +38,44 @@ from hold.util import iso
 
 from .prompt import prompt_for
 
-DEFAULT_COSIGN_KEY = b"hold-local-demo-key-not-for-production"
 DEFAULT_MODEL = "us.anthropic.claude-sonnet-4-20250514-v1:0"
+
+
+def _load_cosign_key() -> bytes:
+    """Load the human-plane signing key from the deployment environment.
+
+    There is deliberately no built-in default. A public fallback key would let
+    anyone holding the repository mint a co-signature, which defeats the entire
+    two-person rule. The runtime refuses to start without a configured key.
+    """
+    value = os.environ.get("HOLD_COSIGN_KEY")
+    if value:
+        return value.encode("utf-8")
+
+    secret_arn = os.environ.get("HOLD_COSIGN_KEY_SECRET_ARN")
+    if secret_arn:
+        try:
+            import boto3  # type: ignore
+        except ModuleNotFoundError as exc:  # pragma: no cover - deployment dependency
+            raise RuntimeError(
+                "HOLD_COSIGN_KEY_SECRET_ARN is set but boto3 is not installed."
+            ) from exc
+        client = boto3.client(
+            "secretsmanager",
+            region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION"),
+        )
+        payload = client.get_secret_value(SecretId=secret_arn)
+        secret = payload.get("SecretString") or ""
+        if not secret:
+            raise RuntimeError(
+                f"Secrets Manager secret {secret_arn!r} is empty; refusing to start."
+            )
+        return secret.encode("utf-8")
+
+    raise RuntimeError(
+        "No human-plane co-signature key is configured. Set HOLD_COSIGN_KEY or "
+        "HOLD_COSIGN_KEY_SECRET_ARN before starting the containment runtime."
+    )
 
 
 class HoldService:
@@ -59,11 +95,7 @@ class HoldService:
         self.run_id = uuid.uuid4().hex[:8]
         self.world = build_world()
         self.guard = InputGuard()
-        self.cosign = CosignAuthority(
-            cosign_key
-            or os.environ.get("HOLD_COSIGN_KEY", "").encode("utf-8")
-            or DEFAULT_COSIGN_KEY
-        )
+        self.cosign = CosignAuthority(cosign_key or _load_cosign_key())
         self.ledger = Ledger()
         self.kernel = AuthorityKernel(
             self.world,

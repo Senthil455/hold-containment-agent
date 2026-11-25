@@ -40,6 +40,11 @@ def service() -> HoldService:
     return _service
 
 
+# Fail closed at container start. A missing signing key must stop the runtime,
+# not surface as a 500 on the first human-plane request.
+service()
+
+
 def _extract_prompt(payload: Any) -> str:
     if isinstance(payload, str):
         return payload

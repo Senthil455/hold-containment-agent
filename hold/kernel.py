@@ -412,7 +412,10 @@ class AuthorityKernel:
                     if p.name in note_fields
                     else spec.constraints.get("text_max", 400)
                 )
-                clean[p.name] = _as_text(v, p.name, max_len=max_len)
+                text = _as_text(v, p.name, max_len=max_len)
+                if p.required and not text.strip():
+                    raise ValidationError("SCHEMA_EMPTY", f"'{p.name}' must not be empty.")
+                clean[p.name] = text
                 if p.enum:
                     _check_enum(clean[p.name], p.name, p.enum)
                 pattern = spec.constraints.get("pattern")

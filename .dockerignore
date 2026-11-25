@@ -1,0 +1,23 @@
+# Keep the AgentCore image context to the runtime tree only.
+.git
+.github
+.venv
+venv
+__pycache__
+*.py[cod]
+*.egg-info
+build
+dist
+artifacts
+docs
+tests
+demo
+evals
+infra
+scripts
+*.md
+debug.log
+*.log
+.env
+.env.*
+node_modules

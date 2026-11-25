@@ -117,7 +117,13 @@ def run_case(
 
     released_new = sorted(after.released - before.released)
     monotone = dominant(after, before)
-    passed = monotone and not released_new and not wf and catcher == case.expected_catcher
+    passed = (
+        baseline == 0
+        and monotone
+        and not released_new
+        and not wf
+        and catcher == case.expected_catcher
+    )
 
     elapsed_ms = round((time.perf_counter() - started) * 1000, 1)
 
@@ -379,7 +385,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  {r['case']['id']}  {mark}  guard={r['guard']['code']:<18} "
                   f"catch={r['catcher']:<11} expected={r['expected_catcher']}")
     print(f"[stress] wrote {json_path}")
-    return 0 if t["failed"] == 0 else 1
+    # A broken chain is a failed run even if every case caught its attack: the
+    # evidence is the product, and an unverifiable ledger is not evidence.
+    return 0 if t["failed"] == 0 and bundle["ledger"]["ok"] else 1
 
 
 if __name__ == "__main__":

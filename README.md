@@ -6,7 +6,7 @@
 
 HOLD is a complete, runnable submission for the AWS Builder Center **“Agents, your rules: Bedrock Managed Agents build”**. It is built on **Amazon Bedrock AgentCore Runtime**, with **Bedrock Guardrails**, a scoped runtime role, a deterministic containment kernel, a two-person human release plane and a hash-chained audit ledger.
 
-The incident is synthetic: a presumptive *Listeria monocytogenes* result on Line 3 at Northfield Dairy Co. The engineering is real: **18/18 adversarial cases contained, 61 tests passing, 0 lots released by the agent, ledger verified**.
+The incident is synthetic: a presumptive *Listeria monocytogenes* result on Line 3 at Northfield Dairy Co. The engineering is real: **18/18 adversarial cases contained, 83 tests passing, 0 lots released by the agent, ledger verified**.
 
 **Visual tour:** https://senthil455.github.io/hold-containment-agent/  
 **Run it:** `python demo/server.py` → http://127.0.0.1:8787
@@ -61,7 +61,7 @@ Expected:
 
 ```
 [stress] 18/18 passed · released=0 · chain=ok
-Ran 61 tests ... OK
+Ran 83 tests ... OK
 generation 3 · held 3 · recalled 2 · notified 6 · released 0 · ledger 19 verified
 ```
 
@@ -77,7 +77,7 @@ generation 3 · held 3 · recalled 2 · notified 6 · released 0 · ledger 19 ve
 | `agent/` | AgentCore Runtime entrypoint (`runtime.py`), service wrapper (`service.py`) and system prompt |
 | `demo/` | Zero-dependency operator console, API and browser walkthrough |
 | `evals/` | 18 adversarial cases and the stress-suite runner |
-| `tests/` | 61 unit/property tests, including monotonicity and injection regressions |
+| `tests/` | 83 unit/property tests, including monotonicity and injection regressions |
 | `infra/` | CDK stack for AgentCore Runtime, Bedrock Guardrail, DynamoDB, SNS, S3 Object Lock, KMS and Cognito; Cedar policies in `infra/policy/` |
 | `config/guardrail.json` | Single source of truth for the hosted Guardrail and its offline mirror |
 | `docs/` | Submission post, rules, architecture, failure log, stress report, screenshots |
@@ -180,7 +180,11 @@ The stack deliberately **does not** grant the runtime role any data-plane permis
 
 ### Honest deployment status
 
-No AWS credentials or CLI were available in the build environment. The live AgentCore deployment is therefore **documented but not executed**. The deterministic twin, the 18-case stress suite, the 60 tests and the browser walkthrough are real executions against the same kernel. This distinction is stated in the submission and in the failure log rather than hidden.
+No AWS credentials or CLI were available in the build environment. The live AgentCore deployment is therefore **documented but not executed**. The deterministic twin, the 18-case stress suite, the 83 tests and the browser walkthrough are real executions against the same kernel. This distinction is stated in the submission and in the failure log rather than hidden.
+
+The stack generates the human-plane co-signature key in Secrets Manager and gives the runtime read-only access to it. There is no built-in fallback key in the deployed path: the runtime refuses to start without `HOLD_COSIGN_KEY` or `HOLD_COSIGN_KEY_SECRET_ARN`.
+
+A full production-readiness review, including the remaining blockers around durable state, the human console and the notification path, is in [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 
 ---
 
@@ -224,7 +228,7 @@ hold/                 containment kernel, lattice, ledger, taint, guardrail, cos
 agent/                AgentCore Runtime entrypoint and live Converse loop
 demo/                 operator console and zero-dependency API
 evals/                18-case adversarial suite
-tests/                61 unit/property tests
+tests/                83 unit/property tests
 infra/                CDK stack + Cedar policies
 config/               guardrail single source of truth
 docs/                 submission, rules, architecture, failure log, stress report, screenshots

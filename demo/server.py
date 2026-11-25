@@ -56,7 +56,11 @@ from hold.util import iso  # noqa: E402
 
 
 STATIC = Path(__file__).resolve().parent / "static"
-COSIGN_KEY = b"hold-local-demo-key-not-for-production"
+# Demo-only key. The deployed runtime has no default and reads its key from
+# Secrets Manager. Never expose this console outside localhost.
+DEMO_COSIGN_KEY = b"hold-local-demo-key-not-for-production"
+COSIGN_KEY = os.environ.get("HOLD_COSIGN_KEY", DEMO_COSIGN_KEY.decode()).encode("utf-8")
+MAX_BODY_BYTES = 1_000_000
 
 
 def _short(h: str | None, n: int = 10) -> str:
@@ -82,7 +86,12 @@ class Demo:
         self.pending: dict[str, Any] = {}
 
     def reset(self) -> None:
+        # Keep the lock object stable across a reset. Replacing it would let a
+        # request that was already waiting on the old lock run against the new
+        # state concurrently with the request that performed the reset.
+        lock = self.lock
         self.__init__()  # noqa: PLC2801 - deliberate full reset
+        self.lock = lock
 
     # -- derived views ----------------------------------------------------
 
@@ -311,7 +320,10 @@ class Demo:
             args = {**payload, "cosign": self.cosign.issue(
                 action=action, requester=QA_DIRECTOR.id, approver=approver, payload=payload)}
         r = self.kernel.invoke(QA_DIRECTOR, action, args)
-        if not r.blocked and action == "release_hold":
+        if not r.blocked and action in {"release_hold", "approve_disposition"}:
+            # A pending release request is moot once the lot is released or
+            # dispositioned. Leaving it pending would let the console show a
+            # request for inventory that no longer exists.
             self.kernel.resolve_requests(lots)
         return {
             "result": r.to_json(),
@@ -372,9 +384,20 @@ class Handler(BaseHTTPRequestHandler):
         self._send(code, body, "application/json; charset=utf-8")
 
     def _read_json(self) -> dict[str, Any]:
-        length = int(self.headers.get("Content-Length") or 0)
+        raw_length = self.headers.get("Content-Length") or "0"
+        try:
+            length = int(raw_length)
+        except ValueError:
+            length = 0
         if length <= 0:
             return {}
+        if length > MAX_BODY_BYTES:
+            # Drain a bounded prefix so a broken client cannot make the demo
+            # allocate an unbounded buffer. The connection is closed after the
+            # 413 response, so the rest of the body is discarded.
+            self.rfile.read(min(length, MAX_BODY_BYTES))
+            self.close_connection = True
+            raise ValueError(f"request body exceeds {MAX_BODY_BYTES} bytes")
         raw = self.rfile.read(length)
         try:
             data = json.loads(raw.decode("utf-8"))
@@ -426,7 +449,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlparse(self.path).path
-        data = self._read_json()
+        try:
+            data = self._read_json()
+        except ValueError as exc:
+            self._json(413, {"error": str(exc)})
+            return
         try:
             with self.demo.lock:
                 if path == "/api/reset":
@@ -553,6 +580,9 @@ def main(argv: list[str] | None = None) -> int:
     print(f"HOLD console  ->  http://{args.host}:{args.port}")
     print(f"incident {demo.world.incident_id} · run {demo.run_id} · "
           f"{len(demo.world.lots)} lots · {len(registry.TOOLS)} tools")
+    if args.host not in {"127.0.0.1", "localhost", "::1"}:
+        print("WARNING: this console has no authentication. Do not expose it; "
+              "the production human plane requires Cognito/OIDC and WebAuthn.")
     print("Ctrl+C to stop.")
     try:
         httpd.serve_forever()

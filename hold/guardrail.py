@@ -24,6 +24,7 @@ that the kernel is the thing being tested.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 from dataclasses import dataclass
@@ -34,7 +35,18 @@ from typing import Any
 from .util import normalize_text, redact_pii
 
 
-CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "guardrail.json"
+def _config_path() -> Path:
+    """Find the guardrail config in a checkout or an installed wheel."""
+    checkout = Path(__file__).resolve().parent.parent / "config" / "guardrail.json"
+    if checkout.is_file():
+        return checkout
+    spec = importlib.util.find_spec("config")
+    if spec and spec.origin:
+        return Path(spec.origin).resolve().parent / "guardrail.json"
+    return checkout
+
+
+CONFIG_PATH = _config_path()
 
 
 @lru_cache(maxsize=1)

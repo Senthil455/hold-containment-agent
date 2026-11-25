@@ -1,7 +1,7 @@
 """The tool catalogue: the complete list of things that can be asked for.
 
 Read this table and you have read the agent's authority. There are 21 tools in
-the catalogue; the agent's principal holds exactly 9 of them. The rest exist
+the catalogue; the agent's principal holds exactly 11 of them. The rest exist
 because they exist in the surrounding enterprise, and a containment system that
 pretends they do not exist is not credible. They are listed, declared, and
 refused.
@@ -300,7 +300,7 @@ TOOLS: tuple[ToolSpec, ...] = (
         name="close_incident",
         effect=Effect.RELEASE,
         plane=Plane.OPERATIONS,
-        summary="Close the incident. Implicitly ends containment; human-only.",
+        summary="Close the incident after every lot is resolved. Human-only.",
         params=(
             _p("cosign", "object", False, "Co-signature token"),
             _p("summary", "string", True, "Closure summary"),

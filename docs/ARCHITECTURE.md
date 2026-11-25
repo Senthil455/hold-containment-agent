@@ -245,4 +245,6 @@ cdk bootstrap
 cdk deploy
 ```
 
-It was not executed in the build environment because no AWS credentials or CLI were available. The deterministic path, the stress suite, the 61 tests and the browser walkthrough are all real executions against the same kernel. The deployment code has been synthesized with `aws-cdk-lib==2.278.0` and the generated template was inspected for the runtime role, Object Lock compliance mode, KMS policy and Cognito client; it is not claimed to be a live deployment. That distinction is in the submission, not buried.
+It was not executed in the build environment because no AWS credentials or CLI were available. The deterministic path, the stress suite, the 83 tests and the browser walkthrough are all real executions against the same kernel. The deployment code has been synthesized with `aws-cdk-lib==2.278.0` and the generated template was inspected for the runtime role, Object Lock compliance mode, KMS policy and Cognito client; it is not claimed to be a live deployment. That distinction is in the submission, not buried.
+
+The state store and ledger writer are still in-memory adapters. The DynamoDB table and S3 Object Lock bucket are provisioned, but the runtime does not yet persist to them; see [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md) for the blocking gap.

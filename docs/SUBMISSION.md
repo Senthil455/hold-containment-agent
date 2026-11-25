@@ -235,7 +235,7 @@ Commands actually run in the build environment:
 
 ```text
 [stress] 18/18 passed · released=0 · chain=ok
-Ran 61 tests ... OK
+Ran 83 tests ... OK
 generation 3 · held 3 · recalled 2 · notified 6 · released 0 · ledger 19 verified
 CDK synth (aws-cdk-lib 2.278.0) -> HoldContainmentStack.template.json
 ```

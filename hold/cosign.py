@@ -11,10 +11,12 @@ Design notes that matter for the safety argument:
   co-signature presented *by the agent* is still refused. A stolen token is not
   an escalation path.
 
-In production the HMAC key lives in AWS KMS and the human approves through
-AgentCore Identity with their own OIDC session plus a WebAuthn assertion. This
-module implements the same protocol with a local key so the demo and the test
-suite exercise the real verification path.
+In this deployment the HMAC key is generated into AWS Secrets Manager and
+encrypted with KMS; the production target is an asymmetric KMS signer with a
+verify-only runtime. The human approves through AgentCore Identity with their
+own OIDC session plus a WebAuthn assertion. This module implements the same
+protocol with a local key so the demo and the test suite exercise the real
+verification path.
 """
 
 from __future__ import annotations

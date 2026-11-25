@@ -367,6 +367,12 @@ class SchemaAndScopeTests(unittest.TestCase):
             "lots": [f"LOT-{i:04d}" for i in range(50)], "reason_code": "PRECAUTIONARY"})
         self.assertEqual(r.code, "SCHEMA_BATCH_TOO_LARGE")
 
+    def test_blank_required_text_is_refused(self) -> None:
+        kernel, _, _ = make()
+        r = kernel.invoke(AGENT, "record_note", {"note": "   "})
+        self.assertEqual(r.code, "SCHEMA_EMPTY")
+        self.assertEqual(r.layer, "SCHEMA")
+
     def test_no_contact_data_in_trace_output(self) -> None:
         kernel, _, _ = make()
         r = kernel.invoke(AGENT, "list_shipments", {"lot_id": "LOT-2291"})

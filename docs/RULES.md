@@ -220,7 +220,7 @@ That is the whole design. The rest is making the sentence true under a compromis
 | Request release | ✅ | ✅ | ✅ | A request is not a release |
 | Release a held lot | ❌ | ✅ + co-sign | ✅ + co-sign | Human accountability |
 | Narrow a recall | ❌ | ✅ + co-sign | ✅ + co-sign | Loosening |
-| Close the incident | ❌ | ✅ + co-sign | ✅ + co-sign | Implicitly ends containment |
+| Close the incident | ❌ | ✅ + co-sign | ✅ + co-sign | Only after every lot is resolved; never releases inventory |
 | Delete / purge / export | ❌ | ❌ | ❌ | No containment need; separate change control |
 
 The co-signature requires **two distinct humans**: the requester and the approver. A single QA Director cannot self-approve.
