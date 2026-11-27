@@ -42,6 +42,14 @@ const PLANE_LABEL = {
   ADMIN: 'admin',
 };
 
+const LOT_STATE_LABEL = {
+  SHIPPABLE: 'Shippable',
+  HELD: 'Held',
+  RECALLED: 'Recalled',
+  RELEASED: 'Released',
+  DISPOSITIONED: 'Dispositioned',
+};
+
 const LAB_DEFAULTS = {
   trace_lot:            { lot_id: 'LOT-2291' },
   search_lots:          { query: 'Alpine Bloom', swab: '' },
@@ -194,7 +202,7 @@ function renderStatic(b) {
   $('#facility').textContent = b.incident.facilities[0] || 'Fresno-02';
   $('#runId').textContent = `run ${b.run_id}`;
   const badge = $('#modeBadge');
-  badge.textContent = b.mode === 'LIVE_BEDROCK' ? 'LIVE BEDROCK' : 'OFFLINE REPLAY';
+  badge.textContent = b.mode === 'LIVE_BEDROCK' ? 'Live Bedrock' : 'Offline replay';
   badge.title = b.mode === 'LIVE_BEDROCK'
     ? 'A Bedrock model is driving the tool calls.'
     : 'Authored walkthrough executed by the real kernel. No model is called in this mode.';
@@ -224,7 +232,7 @@ function renderLots() {
         </span>
         <span class="lot__right">
           <span class="lot__units">${num(lot.units)} ${esc(lot.uom)}</span>
-          <span class="lot__state">${esc(lot.state)}</span>
+          <span class="lot__state">${esc(LOT_STATE_LABEL[lot.state] || lot.state)}</span>
         </span>
       </button>`;
   }).join('');
@@ -313,8 +321,8 @@ function ensureTeeth() {
     line.dataset.v = String(v);
     group.appendChild(line);
   }
-  $('#gaugeLeft').textContent = 'OPEN';
-  $('#gaugeRight').textContent = 'CONTAINED';
+  $('#gaugeLeft').textContent = 'Open';
+  $('#gaugeRight').textContent = 'Contained';
 }
 
 function setMetrics(m, st) {
@@ -330,10 +338,10 @@ function setMetrics(m, st) {
   });
   const mono = $('#monotag');
   if (m.monotone) {
-    mono.textContent = '↑ MONOTONE';
+    mono.textContent = '↑ Monotone';
     mono.classList.remove('monotag--broken');
   } else {
-    mono.textContent = '↯ HUMAN OVERRIDE';
+    mono.textContent = '↯ Human override';
     mono.classList.add('monotag--broken');
   }
 
@@ -531,17 +539,17 @@ function renderBoundary() {
 /* ------------------------------- ledger ---------------------------------- */
 
 function ledgerStatusText(status) {
-  return status.ok ? 'INTACT' : `BROKEN @ ${status.broken_at ?? '?'}`;
+  return status.ok ? 'Intact' : `Broken at ${status.broken_at ?? '?'}`;
 }
 
 function renderLedgerHead(status, entries) {
   const root = status.root || (entries[0]?.hash ?? '');
   $('#ledgerHead').innerHTML = `
-    <span>ENTRIES <b>${esc(status.length ?? entries.length)}</b></span>
-    <span>ROOT <b title="${attr(root)}">${esc(short(root, 20))}</b></span>
-    <span>STATUS <b class="${status.ok ? 'ok' : 'bad'}">${esc(ledgerStatusText(status))}</b></span>
-    <span>ALGORITHM <b>SHA-256 · canonical JSON · prev-hash</b></span>
-    <span>RETENTION <b>S3 Object Lock · governance</b></span>`;
+    <span>Entries <b>${esc(status.length ?? entries.length)}</b></span>
+    <span>Root <b title="${attr(root)}">${esc(short(root, 20))}</b></span>
+    <span>Status <b class="${status.ok ? 'ok' : 'bad'}">${esc(ledgerStatusText(status))}</b></span>
+    <span>Algorithm <b>SHA-256 · canonical JSON · prev-hash</b></span>
+    <span>Retention <b>S3 Object Lock · governance</b></span>`;
 }
 
 function renderLedger(data) {
@@ -553,7 +561,7 @@ function renderLedger(data) {
   else $('#ledgerBanner').innerHTML = '';
   const head = `
     <div class="ledrow ledrow--head">
-      <span>SEQ</span><span>TIME</span><span>TOOL</span><span>EFFECT</span><span>DEC</span><span>LAYER</span><span>HASH</span><span></span>
+      <span>Seq</span><span>Time</span><span>Tool</span><span>Effect</span><span>Decision</span><span>Layer</span><span>Hash</span><span></span>
     </div>`;
   if (!entries.length) {
     $('#ledgerRows').innerHTML = `${head}<div class="empty">The chain is empty. Run a step or invoke a tool in the boundary lab.</div>`;
@@ -625,12 +633,12 @@ function renderHuman() {
     el.innerHTML = `
       <div class="human">
         <div class="human__done">
-          <b>HUMAN OVERRIDE</b> · ${esc((state.lastHuman.released || []).join(', ') || 'none')} released<br>
+          <b>Human override</b> · ${esc((state.lastHuman.released || []).join(', ') || 'none')} released<br>
           <span style="color:var(--muted)">generation ${esc(state.lastHuman.generation ?? '—')} · co-signed by ${esc(state.lastHuman.approver || 'human:vp-quality')}</span>
         </div>
         <p>The agent's recommendation is still on the record. The release exists because two humans signed the exact payload.</p>
         <div class="human__rule"></div>
-        <p class="mono" style="font-size:8px;color:var(--faint)">The agent holds no RELEASE capability. Re-run the walkthrough for a fresh incident.</p>
+        <p class="mono" style="font-size:9.5px;color:var(--faint)">The agent holds no release capability. Re-run the walkthrough for a fresh incident.</p>
       </div>`;
     return;
   }
@@ -639,10 +647,10 @@ function renderHuman() {
     el.innerHTML = `
       <div class="human">
         <div class="req">
-          <div class="req__id"><span>${esc(req.request_id)} · AWAITING CO-SIGN</span><span>2P</span></div>
+          <div class="req__id"><span>${esc(req.request_id)} · Awaiting co-sign</span><span>Two-person</span></div>
           <div class="req__lots">${esc((req.lots || []).join(', '))}</div>
           <p class="req__just">${esc(req.justification)}</p>
-          <div class="mono tiny" style="color:var(--faint)">requested by ${esc(req.requested_by)} · requires ${esc(req.requires_role)}<br>payload ${esc(short(req.payload_hash, 24))}</div>
+          <div class="mono tiny" style="font-size:9.5px;color:var(--faint)">requested by ${esc(req.requested_by)} · requires ${esc(req.requires_role)}<br>payload ${esc(short(req.payload_hash, 24))}</div>
         </div>
         <label class="field">
           <span class="micro">Human justification</span>
@@ -655,11 +663,23 @@ function renderHuman() {
   }
   const lots = releasableLots();
   if (!lots.length) {
+    const st = state.boot?.state || {};
+    const released = st.released || [];
+    const held = st.held || [];
+    const message = released.length
+      ? `No lot is waiting for release. ${released.map(esc).join(', ')} ${released.length === 1 ? 'is' : 'are'} on the record.`
+      : held.length
+        ? 'Every held lot is inside the recall scope. Nothing is releasable.'
+        : 'Nothing is releasable yet. A lot must be held, and it must not sit inside the recall scope.';
+    const hint = released.length
+      ? 'The release is written to the ledger. Re-run the walkthrough for a fresh incident.'
+      : held.length
+        ? 'The agent can widen the recall, but it cannot release a lot.'
+        : 'Run the walkthrough to generate a held lot, or place a hold in the boundary lab.';
     el.innerHTML = `
       <div class="human human__empty">
-        <p>Nothing is releasable yet. A lot must be held, and it must not sit inside the recall scope.</p>
-        <button class="btn btn--full" disabled>Request release</button>
-        <p class="mono" style="font-size:8px;color:var(--faint)">Run the walkthrough to generate a held lot, or place a hold in the boundary lab.</p>
+        <p>${esc(message)}</p>
+        <p class="human__hint">${esc(hint)}</p>
       </div>`;
     return;
   }
@@ -838,19 +858,21 @@ function renderLabDetail() {
       : 'This tool is inside the agent’s capability envelope. The lattice still checks that the resulting state does not loosen containment.');
   const result = state.labResult && state.labResult.tool === tool.name ? renderLabResult(state.labResult) : `
     <div class="empty">Invoke the tool to see which layer answers.</div>`;
+  const effectText = tool.effect.toLowerCase().replaceAll('_', ' ');
+  const effectTitle = effectText.charAt(0).toUpperCase() + effectText.slice(1);
 
   $('#labDetail').innerHTML = `
     <div class="labcard">
       <div class="labcard__head">
         <div>
-          <div class="micro">${esc(EFFECT_LABEL[tool.effect])} · ${esc(tool.plane)} plane</div>
+          <div class="micro">${esc(EFFECT_LABEL[tool.effect])} · ${esc(tool.plane.toLowerCase())} plane</div>
           <h3>${esc(tool.name)}</h3>
           <p>${esc(tool.summary)}</p>
         </div>
         <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
-          <span class="chip chip--lime">${esc(tool.effect)}</span>
-          ${tool.requires_cosign ? '<span class="chip chip--blue">2P CO-SIGN</span>' : ''}
-          ${tool.mutating ? '<span class="chip chip--amber">MUTATING</span>' : '<span class="chip chip--ghost">READ-ONLY</span>'}
+          <span class="chip chip--lime">${esc(effectTitle)}</span>
+          ${tool.requires_cosign ? '<span class="chip chip--blue">Two-person co-sign</span>' : ''}
+          ${tool.mutating ? '<span class="chip chip--amber">Mutating</span>' : '<span class="chip chip--ghost">Read-only</span>'}
         </div>
       </div>
       <div class="labcard__body">
@@ -1069,6 +1091,7 @@ async function verifyLedger(tamper = false) {
     toast(`Chain broken at seq ${st.broken_at}.`, 'bad');
   }
   await loadLedger();
+  $('#ledgerBanner').innerHTML = state.ledgerBanner;
 }
 
 /* ------------------------------ stress ledger ----------------------------- */
@@ -1092,7 +1115,7 @@ function renderRules() {
     <article class="rule">
       <div class="rule__top">
         <span class="rule__id">${esc(r.id)}</span>
-        <span class="rule__plane">${esc((r.plane || 'agent').toUpperCase())} PLANE</span>
+        <span class="rule__plane">${esc((r.plane || 'agent').toLowerCase().replace(/^./, (c) => c.toUpperCase()))} plane</span>
       </div>
       <h3>${esc(r.title)}</h3>
       <p class="rule__plain">${esc(r.plain)}</p>
@@ -1284,6 +1307,12 @@ async function init() {
     state.stress = b.stress;
     state.labDraft = { ...(LAB_DEFAULTS[state.labTool] || {}) };
     renderAll();
+    const wanted = (location.hash || '').replace(/^#/, '');
+    if (wanted && document.getElementById(`view-${wanted}`)) setTab(wanted);
+    window.addEventListener('hashchange', () => {
+      const name = (location.hash || '').replace(/^#/, '');
+      if (name && document.getElementById(`view-${name}`)) setTab(name);
+    });
   } catch (err) {
     console.error(err);
     toast(`Console could not reach the kernel: ${err.message}`, 'bad');

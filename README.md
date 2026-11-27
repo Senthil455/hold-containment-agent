@@ -197,7 +197,7 @@ A full production-readiness review, including the remaining blockers around dura
 | ![Lab](docs/screenshots/06-lab-denied.png) | ![Stress](docs/screenshots/07-stress.png) |
 | The boundary lab shows which layer actually answered | 18/18 adversarial cases, catcher breakdown |
 | ![Ledger](docs/screenshots/12-ledger-verified.png) | ![Human release](docs/screenshots/15-human-release.png) |
-| The hash chain verifies; the tamper drill breaks it visibly | A human co-signature releases one held lot and flips the badge to `↯ HUMAN OVERRIDE` |
+| The hash chain verifies; the shadow tamper drill is in the full gallery | A human co-signature releases one held lot and flips the badge to `↯ HUMAN OVERRIDE` |
 
 All 15 screenshots are in [`docs/screenshots/`](docs/screenshots/).
 
