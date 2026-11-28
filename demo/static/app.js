@@ -927,7 +927,7 @@ function renderLabResult(data) {
   const deny = r.decision === 'DENY';
   const where = {};
   for (const layer of state.boot.layers) where[layer.id] = layer.where;
-  const mark = { passed: '✓', stopped: '■', not_in_path: '—', not_reached: '·' };
+  const mark = { passed: '✓', stopped: '■', not_in_path: '—', not_reached: '·' }; // taste-skill-ignore: layer-stack check glyph, not emoji
   const stack = (data.layers || []).map((l) => `
     <div class="layerrow layerrow--${attr(l.state)}">
       <span class="layerrow__mark">${mark[l.state] || '·'}</span>

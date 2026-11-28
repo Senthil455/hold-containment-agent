@@ -1,0 +1,1733 @@
+{
+ "url": "http://127.0.0.1:8800/",
+ "at": "2026-11-27T18:44:09.435Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 12,
+   "filled": [
+    0.43,
+    0.66,
+    0.57,
+    0.77,
+    0.9,
+    0.65,
+    0.6,
+    0.85,
+    0.32,
+    0.56,
+    0.83,
+    0.66
+   ],
+   "motion": {
+    "elements": 28,
+    "css": 2,
+    "transitions": 26,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 10366,
+     "screens": 11.5,
+     "words": 1760,
+     "img": 7,
+     "video": 0,
+     "canvas": 0,
+     "svg": 0,
+     "sections": 9,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 4,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "02-console-contain.png",
+      "stress-band.png",
+      "human-plane.png",
+      "ledger-crop.png"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "The recall can only grow.",
+     "words": 5,
+     "chars": 25,
+     "lines": 2,
+     "size": 109.4,
+     "vw": 7.6,
+     "font": "Fraunces",
+     "weight": 400,
+     "tracking": -0.055,
+     "leading": 0.94,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.54,
+     "top": 166,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "The recall can only grow.",
+     "words": 5,
+     "lines": 2,
+     "size": 109.4,
+     "font": "Fraunces"
+    },
+    "headings": [
+     {
+      "text": "The recall can only grow.",
+      "words": 5,
+      "chars": 25,
+      "lines": 2,
+      "size": 109.4,
+      "vw": 7.6,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.54,
+      "top": 166,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Bigger. Never smaller.",
+      "words": 3,
+      "chars": 22,
+      "lines": 1,
+      "size": 62,
+      "vw": 4.3,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.41,
+      "top": 956,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The asymmetry is the design.",
+      "words": 5,
+      "chars": 28,
+      "lines": 1,
+      "size": 62,
+      "vw": 4.3,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.55,
+      "top": 1628,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The model is assumed compromised.",
+      "words": 5,
+      "chars": 33,
+      "lines": 2,
+      "size": 62,
+      "vw": 4.3,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.55,
+      "top": 3279,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The model proposes. The kernel decides.",
+      "words": 6,
+      "chars": 39,
+      "lines": 2,
+      "size": 62,
+      "vw": 4.3,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.55,
+      "top": 4804,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "A human can make it smaller.",
+      "words": 6,
+      "chars": 28,
+      "lines": 1,
+      "size": 62,
+      "vw": 4.3,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.55,
+      "top": 6630,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "It broke. We wrote it down.",
+      "words": 6,
+      "chars": 27,
+      "lines": 1,
+      "size": 62,
+      "vw": 4.3,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.55,
+      "top": 7468,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Run it before you trust it.",
+      "words": 6,
+      "chars": 27,
+      "lines": 1,
+      "size": 62,
+      "vw": 4.3,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.55,
+      "top": 9125,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Read the file. Then try to loosen it.",
+      "words": 8,
+      "chars": 37,
+      "lines": 1,
+      "size": 51.8,
+      "vw": 3.6,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.59,
+      "top": 9883,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 9,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 6,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo",
+       "share": 0.86,
+       "mono": false
+      },
+      {
+       "family": "Fraunces",
+       "share": 0.08,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.07,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      13,
+      16,
+      18,
+      24,
+      52,
+      62,
+      109
+     ],
+     "sizeCount": 7,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo",
+      "size": 16,
+      "leading": 1.68,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 7.9
+     },
+     "measureChars": 66,
+     "max": {
+      "size": 109.4,
+      "vw": 7.6,
+      "font": "Fraunces",
+      "text": "The recall can only grow."
+     },
+     "monoShare": 0.07,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.01,
+     "centerShare": 0.01,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e5e6df",
+     "bodyBgHsl": {
+      "h": 69,
+      "s": 0.12,
+      "l": 0.89
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#8e1c16",
+       "top": 838,
+       "hsl": {
+        "h": 3,
+        "s": 0.73,
+        "l": 0.32
+       }
+      },
+      {
+       "color": "#e6e6e2",
+       "top": 2201,
+       "hsl": {
+        "h": 60,
+        "s": 0.07,
+        "l": 0.89
+       }
+      },
+      {
+       "color": "#eef0e9",
+       "top": 3161,
+       "hsl": {
+        "h": 77,
+        "s": 0.19,
+        "l": 0.93
+       }
+      },
+      {
+       "color": "#1b1d19",
+       "top": 8988,
+       "hsl": {
+        "h": 90,
+        "s": 0.07,
+        "l": 0.11
+       }
+      },
+      {
+       "color": "#e5e6df",
+       "top": 9776,
+       "hsl": {
+        "h": 69,
+        "s": 0.12,
+        "l": 0.89
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#2e332e",
+       "share": 0.52
+      },
+      {
+       "color": "#454d45",
+       "share": 0.14
+      },
+      {
+       "color": "#181a17",
+       "share": 0.08
+      },
+      {
+       "color": "#eef0e9",
+       "share": 0.06
+      },
+      {
+       "color": "#d2c7b7",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#b3261e",
+      "hsl": {
+       "h": 3,
+       "s": 0.71,
+       "l": 0.41
+      },
+      "fg": "#eef0e9"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 7,
+     "inHero": 3,
+     "radius": 0,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Skip to the file",
+      "Run it ↗",
+      "Read the evidence ↓"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 6,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.14
+     }
+    ],
+    "nav": {
+     "links": 8,
+     "fixed": true,
+     "height": 72,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo",
+     "fraunces"
+    ]
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 12,
+   "filled": [
+    0.32,
+    0.86,
+    0.49,
+    0.93,
+    0.68,
+    0.53,
+    0.78,
+    0.77,
+    0.49,
+    0.86,
+    0.64,
+    0.62
+   ],
+   "motion": {
+    "elements": 28,
+    "css": 2,
+    "transitions": 26,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 11438,
+     "screens": 11.2,
+     "words": 1750,
+     "img": 7,
+     "video": 0,
+     "canvas": 0,
+     "svg": 0,
+     "sections": 9,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 4,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "02-console-contain.png",
+      "stress-band.png",
+      "human-plane.png",
+      "ledger-crop.png"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "The recall can only grow.",
+     "words": 5,
+     "chars": 25,
+     "lines": 2,
+     "size": 58.4,
+     "vw": 7.6,
+     "font": "Fraunces",
+     "weight": 400,
+     "tracking": -0.055,
+     "leading": 0.94,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.91,
+     "top": 126,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "The recall can only grow.",
+     "words": 5,
+     "lines": 2,
+     "size": 58.4,
+     "font": "Fraunces"
+    },
+    "headings": [
+     {
+      "text": "The recall can only grow.",
+      "words": 5,
+      "chars": 25,
+      "lines": 2,
+      "size": 58.4,
+      "vw": 7.6,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.055,
+      "leading": 0.94,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 126,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Bigger. Never smaller.",
+      "words": 3,
+      "chars": 22,
+      "lines": 1,
+      "size": 36.1,
+      "vw": 4.7,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 1205,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The asymmetry is the design.",
+      "words": 5,
+      "chars": 28,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 2011,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The model is assumed compromised.",
+      "words": 5,
+      "chars": 33,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 3584,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The model proposes. The kernel decides.",
+      "words": 6,
+      "chars": 39,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 4978,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "A human can make it smaller.",
+      "words": 6,
+      "chars": 28,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 6771,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "It broke. We wrote it down.",
+      "words": 6,
+      "chars": 27,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 8010,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Run it before you trust it.",
+      "words": 6,
+      "chars": 27,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.91,
+      "top": 9697,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Read the file. Then try to loosen it.",
+      "words": 8,
+      "chars": 37,
+      "lines": 2,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.42,
+      "top": 10761,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 9,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 6,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo",
+       "share": 0.86,
+       "mono": false
+      },
+      {
+       "family": "Fraunces",
+       "share": 0.08,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.07,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      13,
+      16,
+      18,
+      24,
+      36,
+      58
+     ],
+     "sizeCount": 6,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo",
+      "size": 16,
+      "leading": 1.68,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 7.9
+     },
+     "measureChars": 66,
+     "max": {
+      "size": 58.4,
+      "vw": 7.6,
+      "font": "Fraunces",
+      "text": "The recall can only grow."
+     },
+     "monoShare": 0.07,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.01,
+     "centerShare": 0.01,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e5e6df",
+     "bodyBgHsl": {
+      "h": 69,
+      "s": 0.12,
+      "l": 0.89
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#8e1c16",
+       "top": 1140,
+       "hsl": {
+        "h": 3,
+        "s": 0.73,
+        "l": 0.32
+       }
+      },
+      {
+       "color": "#e6e6e2",
+       "top": 2930,
+       "hsl": {
+        "h": 60,
+        "s": 0.07,
+        "l": 0.89
+       }
+      },
+      {
+       "color": "#eef0e9",
+       "top": 3518,
+       "hsl": {
+        "h": 77,
+        "s": 0.19,
+        "l": 0.93
+       }
+      },
+      {
+       "color": "#1b1d19",
+       "top": 9628,
+       "hsl": {
+        "h": 90,
+        "s": 0.07,
+        "l": 0.11
+       }
+      },
+      {
+       "color": "#e5e6df",
+       "top": 10647,
+       "hsl": {
+        "h": 69,
+        "s": 0.12,
+        "l": 0.89
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#2e332e",
+       "share": 0.52
+      },
+      {
+       "color": "#454d45",
+       "share": 0.13
+      },
+      {
+       "color": "#181a17",
+       "share": 0.08
+      },
+      {
+       "color": "#eef0e9",
+       "share": 0.06
+      },
+      {
+       "color": "#d2c7b7",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#b3261e",
+      "hsl": {
+       "h": 3,
+       "s": 0.71,
+       "l": 0.41
+      },
+      "fg": "#eef0e9"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 7,
+     "inHero": 3,
+     "radius": 0,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Skip to the file",
+      "Run it ↗",
+      "Read the evidence ↓"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 7,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.18
+     }
+    ],
+    "nav": {
+     "links": 2,
+     "fixed": true,
+     "height": 72,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo",
+     "fraunces"
+    ]
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 12,
+   "filled": [
+    0.55,
+    0.79,
+    0.8,
+    0.6,
+    0.84,
+    0.99,
+    0.59,
+    0.76,
+    0.65,
+    0.68,
+    0.94,
+    0.65
+   ],
+   "motion": {
+    "elements": 23,
+    "css": 2,
+    "transitions": 21,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 13971,
+     "screens": 16.6,
+     "words": 1763,
+     "img": 7,
+     "video": 0,
+     "canvas": 0,
+     "svg": 0,
+     "sections": 9,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 4,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "02-console-contain.png",
+      "stress-band.png",
+      "human-plane.png",
+      "ledger-crop.png"
+     ],
+     "blendText": 0,
+     "sideScrollers": 4,
+     "brokenImages": [],
+     "emoji": []
+    },
+    "hero": {
+     "text": "The recall can only grow.",
+     "words": 5,
+     "chars": 25,
+     "lines": 2,
+     "size": 47.6,
+     "vw": 12.2,
+     "font": "Fraunces",
+     "weight": 400,
+     "tracking": -0.055,
+     "leading": 0.96,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.9,
+     "top": 96,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "The recall can only grow.",
+     "words": 5,
+     "lines": 2,
+     "size": 47.6,
+     "font": "Fraunces"
+    },
+    "headings": [
+     {
+      "text": "H HOLD",
+      "words": 2,
+      "chars": 6,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 700,
+      "tracking": -0.035,
+      "leading": 1.08,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.28,
+      "top": 16,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "The recall can only grow.",
+      "words": 5,
+      "chars": 25,
+      "lines": 2,
+      "size": 47.6,
+      "vw": 12.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.055,
+      "leading": 0.96,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 96,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Bigger. Never smaller.",
+      "words": 3,
+      "chars": 22,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 1258,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "3",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.04,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.25,
+      "top": 1735,
+      "tag": "b",
+      "kind": "heading"
+     },
+     {
+      "text": "2",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.04,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.25,
+      "top": 1735,
+      "tag": "b",
+      "kind": "heading"
+     },
+     {
+      "text": "0",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.04,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.25,
+      "top": 1735,
+      "tag": "b",
+      "kind": "heading"
+     },
+     {
+      "text": "The asymmetry is the design.",
+      "words": 5,
+      "chars": 28,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 2235,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The model is assumed compromised.",
+      "words": 5,
+      "chars": 33,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 4133,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The model proposes. The kernel decides.",
+      "words": 6,
+      "chars": 39,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 6010,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "A human can make it smaller.",
+      "words": 6,
+      "chars": 28,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 8214,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "It broke. We wrote it down.",
+      "words": 6,
+      "chars": 27,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 9614,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "The guardrail never lowercased the prompt.",
+      "words": 6,
+      "chars": 42,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 600,
+      "tracking": -0.015,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 9859,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "The canary was flagged but still there.",
+      "words": 7,
+      "chars": 39,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 600,
+      "tracking": -0.015,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 10139,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "The live model got the raw supplier document.",
+      "words": 8,
+      "chars": 45,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 600,
+      "tracking": -0.015,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 10419,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "The layer trace claimed layers that had not run.",
+      "words": 9,
+      "chars": 48,
+      "lines": 2,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 600,
+      "tracking": -0.015,
+      "leading": 1.25,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 10700,
+      "tag": "h3",
+      "kind": "heading"
+     },
+     {
+      "text": "Run it before you trust it.",
+      "words": 6,
+      "chars": 27,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 11815,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Read the file. Then try to loosen it.",
+      "words": 8,
+      "chars": 37,
+      "lines": 2,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Fraunces",
+      "weight": 400,
+      "tracking": -0.045,
+      "leading": 1.02,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 13290,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "HOLD",
+      "words": 1,
+      "chars": 4,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Fraunces",
+      "weight": 700,
+      "tracking": -0.035,
+      "leading": 1.6,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.18,
+      "top": 13642,
+      "tag": "span",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 18,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 6,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Archivo",
+       "share": 0.86,
+       "mono": false
+      },
+      {
+       "family": "Fraunces",
+       "share": 0.08,
+       "mono": false
+      },
+      {
+       "family": "ui-monospace",
+       "share": 0.07,
+       "mono": false
+      }
+     ],
+     "familyCount": 3,
+     "sizes": [
+      13,
+      16,
+      18,
+      24,
+      36,
+      48
+     ],
+     "sizeCount": 6,
+     "notLoaded": [],
+     "body": {
+      "font": "Archivo",
+      "size": 16,
+      "leading": 1.68,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 7.9
+     },
+     "measureChars": 44,
+     "max": {
+      "size": 47.6,
+      "vw": 12.2,
+      "font": "Fraunces",
+      "text": "The recall can only grow."
+     },
+     "monoShare": 0.07,
+     "monoProseShare": 0,
+     "monoFamilies": [
+      "ui-monospace"
+     ],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.01,
+     "centerShare": 0.01,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e5e6df",
+     "bodyBgHsl": {
+      "h": 69,
+      "s": 0.12,
+      "l": 0.89
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#8e1c16",
+       "top": 1202,
+       "hsl": {
+        "h": 3,
+        "s": 0.73,
+        "l": 0.32
+       }
+      },
+      {
+       "color": "#eef0e9",
+       "top": 1716,
+       "hsl": {
+        "h": 77,
+        "s": 0.19,
+        "l": 0.93
+       }
+      },
+      {
+       "color": "#e6e6e2",
+       "top": 3409,
+       "hsl": {
+        "h": 60,
+        "s": 0.07,
+        "l": 0.89
+       }
+      },
+      {
+       "color": "#e5e6df",
+       "top": 5142,
+       "hsl": {
+        "h": 69,
+        "s": 0.12,
+        "l": 0.89
+       }
+      },
+      {
+       "color": "#1b1d19",
+       "top": 11746,
+       "hsl": {
+        "h": 90,
+        "s": 0.07,
+        "l": 0.11
+       }
+      },
+      {
+       "color": "#141612",
+       "top": 13600,
+       "hsl": {
+        "h": 90,
+        "s": 0.1,
+        "l": 0.08
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#2e332e",
+       "share": 0.52
+      },
+      {
+       "color": "#454d45",
+       "share": 0.14
+      },
+      {
+       "color": "#181a17",
+       "share": 0.08
+      },
+      {
+       "color": "#eef0e9",
+       "share": 0.06
+      },
+      {
+       "color": "#d2c7b7",
+       "share": 0.04
+      }
+     ],
+     "button": {
+      "bg": "#b3261e",
+      "hsl": {
+       "h": 3,
+       "s": 0.71,
+       "l": 0.41
+      },
+      "fg": "#eef0e9"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 7,
+     "inHero": 3,
+     "radius": 0,
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Skip to the file",
+      "Run it ↗",
+      "Read the evidence ↓"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 7,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.23
+     }
+    ],
+    "nav": {
+     "links": 2,
+     "fixed": true,
+     "height": 62,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "archivo",
+     "fraunces"
+    ]
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "font-count",
+   "width": 1440,
+   "message": "3 typefaces in use (Archivo, Fraunces, ui-monospace).",
+   "fix": "Two at most.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "side-scroll",
+   "width": 390,
+   "message": "4 row(s) scroll sideways with content past their edge.",
+   "fix": "Jurors and most visitors read a row cut at the edge as clipped, not as scrollable. Wrap it onto more lines, or end it inside the grid."
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\desktop-fold.jpg",
+   "pages": [
+    "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\desktop-page-01.jpg",
+    "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\desktop-page-02.jpg",
+    "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\desktop-page-03.jpg"
+   ]
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\tablet-fold.jpg",
+   "pages": [
+    "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\tablet-page-01.jpg",
+    "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\tablet-page-02.jpg"
+   ]
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\mobile-fold.jpg",
+   "pages": [
+    "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\mobile-page-01.jpg",
+    "C:\\Users\\senth\\Downloads\\Projects\\AWS\\.taste-skill\\inspect\\mobile-page-02.jpg"
+   ]
+  }
+ ]
+}
